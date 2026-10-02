@@ -2,5 +2,8 @@
     <string name="app_name">Android1</string>
 
     <string name="btn_mi_ubicacion">Centrar en mi ubicación</string>
-    <string name="error_navegacion">No se pudo abrir la navegación hacia %1$s</string>
+    <string name="ubicacion_actual">Mi ubicación</string>
+    <string name="error_permiso_ubicacion">Permiso de ubicación denegado: no se puede mostrar tu posición.</string>
+    <string name="error_sin_ubicacion">No se pudo obtener tu ubicación. Activa el GPS e inténtalo de nuevo.</string>
+    <string name="error_encuadre">No se pudo encuadrar el mapa.</string>
 </resources>

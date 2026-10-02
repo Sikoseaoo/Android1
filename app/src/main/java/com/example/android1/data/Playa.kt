@@ -1,6 +1,6 @@
 package com.example.android1.data
 
-import com.google.android.gms.maps.model.LatLng
+import org.osmdroid.util.GeoPoint
 
 data class Playa(
     val nombre: String,
@@ -8,5 +8,5 @@ data class Playa(
     val longitud: Double,
     val descripcion: String,
 ) {
-    val posicion: LatLng get() = LatLng(latitud, longitud)
+    val posicion: GeoPoint get() = GeoPoint(latitud, longitud)
 }

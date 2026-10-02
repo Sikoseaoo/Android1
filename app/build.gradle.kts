@@ -1,15 +1,6 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
 }
-
-val mapsApiKey: String = Properties().apply {
-    val archivo = rootProject.file("local.properties")
-    if (archivo.exists()) {
-        archivo.inputStream().use { load(it) }
-    }
-}.getProperty("MAPS_API_KEY") ?: ""
 
 android {
     namespace = "com.example.android1"
@@ -25,8 +16,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        manifestPlaceholders["mapsApiKey"] = mapsApiKey
     }
 
     buildTypes {
@@ -48,9 +37,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
-    
-    // Google Maps
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

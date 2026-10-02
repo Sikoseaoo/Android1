@@ -1,11 +1,11 @@
 package com.example.android1.data
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 
 object PlayasTarapaca {
 
-    val CENTRO: LatLng = LatLng(-20.2397, -70.1432)
+    val CENTRO: GeoPoint = GeoPoint(-20.2397, -70.1432)
 
     val todas: List<Playa> = listOf(
         Playa(
@@ -22,19 +22,25 @@ object PlayasTarapaca {
         ),
     )
 
-    const val ZOOM_POR_DEFECTO = 12f
+    const val ZOOM_POR_DEFECTO = 12.0
 
-    const val RELLENO_DP = 48
+    const val ZOOM_USUARIO = 15.0
 
-    fun limites(): LatLngBounds? {
+    fun limites(): BoundingBox? {
         if (todas.isEmpty()) return null
 
-        val limites = LatLngBounds.Builder()
-        for (playa in todas) {
-            limites.include(playa.posicion)
-        }
-        return limites.build()
-    }
+        var latitudMin = Double.MAX_VALUE
+        var latitudMax = -Double.MAX_VALUE
+        var longitudMin = Double.MAX_VALUE
+        var longitudMax = -Double.MAX_VALUE
 
-    fun rellenoPx(densidad: Float): Int = (RELLENO_DP * densidad).toInt()
+        for (playa in todas) {
+            latitudMin = minOf(latitudMin, playa.latitud)
+            latitudMax = maxOf(latitudMax, playa.latitud)
+            longitudMin = minOf(longitudMin, playa.longitud)
+            longitudMax = maxOf(longitudMax, playa.longitud)
+        }
+
+        return BoundingBox(latitudMax, longitudMax, latitudMin, longitudMin)
+    }
 }
