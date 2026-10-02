@@ -1,5 +1,16 @@
 <resources>
-    <string name="app_name">Android1</string>
+    <string name="app_name">Tarapaca</string>
+
+    <string name="inicio_titulo">Bienvenido a Tarapaca</string>
+    <string name="inicio_subtitulo">Informacion de las playas de la region</string>
+    <string name="inicio_playas">Playas</string>
+    <string name="inicio_reportes">Reportes</string>
+    <string name="inicio_perfil">Perfil</string>
+
+    <string name="titulo_reportes">Reportes</string>
+    <string name="titulo_perfil">Perfil</string>
+    <string name="volver">Volver</string>
+    <string name="reportes_contador">%1$d reportes registrados</string>
 
     <string name="btn_mi_ubicacion">Centrar en mi ubicación</string>
     <string name="ubicacion_actual">Mi ubicación</string>
@@ -7,4 +18,13 @@
     <string name="error_sin_ubicacion">No se pudo obtener tu ubicación. Activa el GPS e inténtalo de nuevo.</string>
     <string name="error_encuadre">No se pudo encuadrar el mapa.</string>
     <string name="error_abrir_mapa">No se pudo abrir %1$s en una app de mapas.</string>
+
+    <string name="perfil_nombre">Visitante</string>
+    <string name="perfil_email">visitante@ejemplo.cl</string>
+    <string name="perfil_region">Region de Tarapaca, Chile</string>
+    <string name="perfil_inicial">V</string>
+    <string name="perfil_playas">Playas</string>
+    <string name="perfil_reportes">Reportes</string>
+    <string name="perfil_playas_numeradas">%1$d</string>
+    <string name="perfil_reportes_numerados">%1$d</string>
 </resources>
