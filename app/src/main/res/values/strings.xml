@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Android1</string>
+
+    <string name="btn_mi_ubicacion">Centrar en mi ubicación</string>
+    <string name="error_navegacion">No se pudo abrir la navegación hacia %1$s</string>
 </resources>
