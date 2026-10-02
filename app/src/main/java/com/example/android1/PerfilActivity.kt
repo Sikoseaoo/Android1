@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android1.data.PlayasTarapaca
-import com.example.android1.data.ReportesTarapaca
+import com.example.android1.data.ReportesAlmacen
 
 class PerfilActivity : AppCompatActivity() {
 
@@ -26,7 +26,7 @@ class PerfilActivity : AppCompatActivity() {
         region.text = getString(R.string.perfil_region)
 
         val cantidadPlayas = PlayasTarapaca.todas.size
-        val cantidadReportes = ReportesTarapaca.todos.size
+        val cantidadReportes = ReportesAlmacen.leer(this).size
 
         playas.text = getString(R.string.perfil_playas_numeradas, cantidadPlayas)
         reportes.text = getString(R.string.perfil_reportes_numerados, cantidadReportes)

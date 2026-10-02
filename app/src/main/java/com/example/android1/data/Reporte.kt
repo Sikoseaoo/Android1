@@ -5,6 +5,7 @@ import java.util.Date
 import java.util.Locale
 
 data class Reporte(
+    val id: Long,
     val playa: String,
     val categoria: String,
     val descripcion: String,

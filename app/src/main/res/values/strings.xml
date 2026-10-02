@@ -12,6 +12,18 @@
     <string name="volver">Volver</string>
     <string name="reportes_contador">%1$d reportes registrados</string>
 
+    <string name="filtro_todas">Todas</string>
+    <string name="nuevo_reporte">Nuevo reporte</string>
+
+    <string name="form_titulo">Nuevo reporte</string>
+    <string name="form_playa">Playa</string>
+    <string name="form_categoria">Categoría</string>
+    <string name="form_descripcion">Descripción</string>
+    <string name="form_descripcion_hint">Describe lo que encontraste</string>
+    <string name="form_error_descripcion">La descripción no puede estar vacía</string>
+    <string name="guardar">Guardar</string>
+    <string name="cancelar">Cancelar</string>
+
     <string name="btn_mi_ubicacion">Centrar en mi ubicación</string>
     <string name="ubicacion_actual">Mi ubicación</string>
     <string name="error_permiso_ubicacion">Permiso de ubicación denegado: no se puede mostrar tu posición.</string>

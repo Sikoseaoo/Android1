@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/form_playa"
+            android:textColor="@color/textoPrimario"
+            android:textSize="13sp" />
+
+        <RadioGroup
+            android:id="@+id/grupoPlayas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/form_categoria"
+            android:textColor="@color/textoPrimario"
+            android:textSize="13sp" />
+
+        <RadioGroup
+            android:id="@+id/grupoCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/form_descripcion"
+            android:textColor="@color/textoPrimario"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/campoDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/campo_texto"
+            android:gravity="top"
+            android:hint="@string/form_descripcion_hint"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="3"
+            android:padding="12dp"
+            android:textColor="@color/textoPrimario"
+            android:textColorHint="@color/textoSecundario"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</ScrollView>
