@@ -6,4 +6,5 @@
     <string name="error_permiso_ubicacion">Permiso de ubicación denegado: no se puede mostrar tu posición.</string>
     <string name="error_sin_ubicacion">No se pudo obtener tu ubicación. Activa el GPS e inténtalo de nuevo.</string>
     <string name="error_encuadre">No se pudo encuadrar el mapa.</string>
+    <string name="error_abrir_mapa">No se pudo abrir %1$s en una app de mapas.</string>
 </resources>

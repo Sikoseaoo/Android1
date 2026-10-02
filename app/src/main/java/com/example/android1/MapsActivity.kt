@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.android1.data.Playa
 import com.example.android1.data.PlayasTarapaca
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -14,6 +15,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 import java.io.File
 
 class MapsActivity : AppCompatActivity() {
@@ -66,19 +68,28 @@ class MapsActivity : AppCompatActivity() {
         for (playa in PlayasTarapaca.todas) {
             val marcador = Marker(mapa)
             marcador.position = playa.posicion
-            marcador.title = playa.nombre
             marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marcador.setTitle(playa.nombre)
+            marcador.setSnippet(playa.descripcion)
+            marcador.infoWindow = MarkerInfoWindow(R.layout.ventana_playa, mapa)
             marcador.setOnMarkerClickListener { _, _ ->
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("geo:${playa.latitud},${playa.longitud}?q=" +
-                            "${playa.latitud},${playa.longitud}(${Uri.encode(playa.nombre)})")
-                    )
-                )
+                abrirEnMapa(playa)
                 true
             }
             mapa.overlays.add(marcador)
+        }
+    }
+
+    private fun abrirEnMapa(playa: Playa) {
+        val uri = Uri.parse(
+            "geo:${playa.latitud},${playa.longitud}" +
+                "?q=${playa.latitud},${playa.longitud}(${Uri.encode(playa.nombre)})"
+        )
+
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }.onFailure {
+            avisar(getString(R.string.error_abrir_mapa, playa.nombre))
         }
     }
 
