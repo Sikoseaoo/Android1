@@ -3,14 +3,7 @@ package com.example.android1
 import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.MapTileIndex
 
-/**
- * Los teseles oficiales de OpenStreetMap rechazan las peticiones que vienen de
- * una app y CartoDB pide API key, asi que se usan los de Esri, que no
- * requieren registro.
- *
- * Esri entrega imagenes jpeg y en el orden z/y/x, distinto al habitual, por eso
- * la URL se arma a mano en vez de dejar que la arme XYTileSource.
- */
+// OSM no deja usar sus teseles desde una app, asi que van los de Esri
 object Teselas {
 
     private const val ZOOM_MINIMO = 3
@@ -24,6 +17,7 @@ object Teselas {
 
     val claro = crear("EsriClaro", "${ESRI}World_Topo_Map/MapServer/tile/")
 
+    // XYTileSource no cambia {s}, y Esri usa z/y/x con jpeg
     private fun crear(nombre: String, base: String) = object :
         XYTileSource(nombre, ZOOM_MINIMO, ZOOM_MAXIMO, TAMANO, ".jpg", arrayOf(SIN_URL)) {
 

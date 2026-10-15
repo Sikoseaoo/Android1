@@ -33,11 +33,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.io.File
 
-/**
- * Usa Google Maps cuando hay clave configurada y Google Play Services esta
- * disponible. Si falta cualquiera de las dos cosas, cae a OpenStreetMap para
- * que la app siga mostrando el mapa.
- */
+// usa Google Maps si hay clave, si no cae a los teselas de Esri
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var contenedor: FrameLayout
@@ -116,8 +112,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val configuracion = Configuration.getInstance()
         configuracion.load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
 
-        // OSM rechaza las peticiones con un user agent generico, por eso se
-        // identifica la app y su version.
+        // hay que identificarse o los servidores rechazan las peticiones
         configuracion.userAgentValue = USER_AGENT
 
         val base = File(cacheDir, "osmdroid")
@@ -182,7 +177,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             zonasPorId[zona.id.toString()] = zona
         }
 
-        // En esta version de la libreria el listener va en el mapa, no en el marcador.
+        // en esta version el listener va en el mapa y no en el marcador
         mapa.setOnMarkerClickListener { marcador ->
             val zona = marcador.tag as? String
             if (zona == null) return@setOnMarkerClickListener false

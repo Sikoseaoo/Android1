@@ -21,10 +21,7 @@ class BaseDeDatosHelper(contexto: Context) : SQLiteOpenHelper(
         }
     }
 
-    /**
-     * La version 2 renombro la tabla de apoyos a reportes, asi que los datos
-     * de la version 1 se descartan y se vuelve a cargar el catalogo de zonas.
-     */
+    // en la v2 la tabla de apoyos paso a llamarse reporte
     override fun onUpgrade(db: SQLiteDatabase, anterior: Int, nueva: Int) {
         db.execSQL("DROP TABLE IF EXISTS ${ContratoIquique.Reporte.TABLA}")
         db.execSQL("DROP TABLE IF EXISTS ${ContratoIquique.Zona.TABLA}")

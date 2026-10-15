@@ -17,10 +17,7 @@ class ReporteDao internal constructor(private val db: SQLiteDatabase) {
     fun porZona(zonaId: Long): List<Reporte> =
         consultar("${T}.${ContratoIquique.Reporte.ZONA_ID} = ?", arrayOf("$zonaId"), null)
 
-    /**
-     * Filtra por zona, categoria y texto libre. Los tres criterios son opcionales y
-     * se arman con selectionArgs para no concatenar valores en la consulta.
-     */
+    // Los filtros van como argumentos, no pegados en la consulta
     fun filtrar(zonaId: Long?, categoria: String?, texto: String?): List<Reporte> {
         val condiciones = mutableListOf<String>()
         val argumentos = mutableListOf<String>()

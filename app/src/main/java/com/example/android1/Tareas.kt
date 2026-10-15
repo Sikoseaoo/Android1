@@ -5,10 +5,7 @@ import android.os.Looper
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-/**
- * Las consultas a SQLite y la lectura de sensores no pueden ir en el hilo de la
- * interfaz, asi que se ejecutan aqui y el resultado vuelve al hilo principal.
- */
+// las consultas a la base van fuera del hilo de la interfaz
 object Tareas {
 
     private val principal = Handler(Looper.getMainLooper())

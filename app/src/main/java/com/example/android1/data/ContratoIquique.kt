@@ -7,7 +7,6 @@ object ContratoIquique {
     const val VERSION = 2
     const val NOMBRE_BASE = "iquique.db"
 
-    /** Zona de Iquique donde la gente puede denunciar o pedir mejora. */
     object Zona : BaseColumns {
         const val ID = BaseColumns._ID
         const val TABLA = "zona"
@@ -20,7 +19,6 @@ object ContratoIquique {
         val COLUMNAS = arrayOf(ID, NOMBRE, CATEGORIA, LATITUD, LONGITUD, DESCRIPCION)
     }
 
-    /** Reclamo o queja que alguien deja sobre una zona. */
     object Reporte : BaseColumns {
         const val ID = BaseColumns._ID
         const val TABLA = "reporte"
