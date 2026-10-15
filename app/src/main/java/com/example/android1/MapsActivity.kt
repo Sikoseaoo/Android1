@@ -95,6 +95,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mapaOsm.visibility = View.GONE
         } else {
             etiquetaMapa.text = getString(R.string.mapa_respaldo)
+            findViewById<View>(R.id.creditoMapa).visibility = View.VISIBLE
             configurarOsmdroid()
         }
     }
@@ -123,7 +124,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         configuracion.osmdroidBasePath = base
         configuracion.osmdroidTileCache = File(base, "tiles")
 
-        mapaOsm.setTileSource(TileSourceFactory.MAPNIK)
+        mapaOsm.setTileSource(Teselas.oscuro)
         mapaOsm.setMultiTouchControls(true)
         mapaOsm.setUseDataConnection(true)
         mapaOsm.controller.setZoom(IquiqueCatalogo.ZOOM_POR_DEFECTO)
