@@ -4,38 +4,77 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mapaContenedor"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fondoApp">
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/mapa"
+    <FrameLayout
+        android:id="@+id/contenedorMapa"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Spinner
-        android:id="@+id/spinnerCategoriaMapa"
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapaOsm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/tarjetaFiltro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/tarjeta_dato"
-        android:minWidth="150dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="44dp"
+        app:cardBackgroundColor="@color/fondoTarjeta"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Spinner
+            android:id="@+id/spinnerCategoriaMapa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="160dp"
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="12dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/etiquetaMapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/etiqueta_categoria"
+        android:paddingStart="10dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/acentoClaro"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tarjetaFiltro" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/botonMiUbicacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:contentDescription="@string/btn_mi_ubicacion"
-        android:src="@android:drawable/ic_menu_mylocation"
+        android:src="@drawable/ic_ubicacion"
+        app:backgroundTint="@color/acento"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/blanco" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,12 +6,23 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android1.data.IquiqueCatalogo
 import com.example.android1.data.Zona
 import com.example.android1.data.ZonaDao
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import org.osmdroid.config.Configuration
@@ -20,17 +31,27 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 import java.io.File
 
-class MapsActivity : AppCompatActivity() {
+/**
+ * Usa Google Maps cuando hay clave configurada y Google Play Services esta
+ * disponible. Si falta cualquiera de las dos cosas, cae a OpenStreetMap para
+ * que la app siga mostrando el mapa.
+ */
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mapa: MapView
+    private lateinit var contenedor: FrameLayout
+    private lateinit var mapaOsm: MapView
+    private lateinit var etiquetaMapa: TextView
+    private lateinit var filtroCategoria: Spinner
+
     private val zonaDao by lazy { ZonaDao(this) }
 
-    private val marcadoresZona = mutableListOf<Marker>()
+    private var googleMap: GoogleMap? = null
+    private var marcadoresOsm = mutableListOf<Marker>()
     private var marcadorUbicacion: Marker? = null
-    private var filtroCategoria: Spinner? = null
+    private var pendientes: List<Zona> = emptyList()
+    private val zonasPorId = mutableMapOf<String, Zona>()
 
     private val pedirPermiso =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { concedido ->
@@ -41,20 +62,52 @@ class MapsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-        configurarOsmdroid()
-
-        mapa = findViewById(R.id.mapa)
-        mapa.setTileSource(TileSourceFactory.MAPNIK)
-        mapa.setMultiTouchControls(true)
-        mapa.setUseDataConnection(true)
-        mapa.controller.setZoom(IquiqueCatalogo.ZOOM_POR_DEFECTO)
-        mapa.controller.setCenter(IquiqueCatalogo.CENTRO)
+        contenedor = findViewById(R.id.contenedorMapa)
+        mapaOsm = findViewById(R.id.mapaOsm)
+        etiquetaMapa = findViewById(R.id.etiquetaMapa)
 
         configurarFiltro()
-        cargarZonas()
+        prepararMapa()
 
         findViewById<FloatingActionButton>(R.id.botonMiUbicacion).setOnClickListener {
             pedirUbicacion()
+        }
+    }
+
+    private fun usarGoogle(): Boolean {
+        if (BuildConfig.CLAVE_MAPS.isBlank()) return false
+        return GoogleApiAvailability.getInstance()
+            .isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
+    }
+
+    private fun prepararMapa() {
+        if (usarGoogle()) {
+            etiquetaMapa.text = getString(R.string.mapa_google)
+
+            val existente = supportFragmentManager.findFragmentById(R.id.contenedorMapa)
+            if (existente is SupportMapFragment) return
+
+            val fragmento = SupportMapFragment.newInstance()
+            fragmento.getMapAsync(this)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.contenedorMapa, fragmento)
+                .commit()
+            mapaOsm.visibility = View.GONE
+        } else {
+            etiquetaMapa.text = getString(R.string.mapa_respaldo)
+            configurarOsmdroid()
+        }
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+        map.uiSettings.isZoomControlsEnabled = false
+        map.uiSettings.isMapToolbarEnabled = false
+        mapaOsm.visibility = View.GONE
+
+        if (pendientes.isNotEmpty()) {
+            dibujarEnGoogle(pendientes)
+            pendientes = emptyList()
         }
     }
 
@@ -66,51 +119,22 @@ class MapsActivity : AppCompatActivity() {
         val base = File(cacheDir, "osmdroid")
         configuracion.osmdroidBasePath = base
         configuracion.osmdroidTileCache = File(base, "tiles")
-    }
 
-    private fun cargarZonas() {
-        val posicion = filtroCategoria?.selectedItemPosition ?: 0
-
-        Tareas.consultar({
-            if (posicion > 0) zonaDao.porCategoria(IquiqueCatalogo.CATEGORIAS[posicion - 1])
-            else zonaDao.listar()
-        }) { zonas ->
-            pintarMarcadores(zonas)
-        }
-    }
-
-    private fun pintarMarcadores(zonas: List<Zona>) {
-        mapa.overlays.removeAll(marcadoresZona)
-        marcadoresZona.clear()
-
-        for (zona in zonas) {
-            val marcador = Marker(mapa)
-            marcador.position = zona.posicion
-            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marcador.setTitle(zona.nombre)
-            marcador.setSnippet(zona.descripcion)
-            marcador.infoWindow = MarkerInfoWindow(R.layout.ventana_zona, mapa)
-            marcador.setOnMarkerClickListener { _, _ ->
-                abrirZona(zona)
-                true
-            }
-            mapa.overlays.add(marcador)
-            marcadoresZona.add(marcador)
-        }
-
-        mapa.invalidate()
-        if (zonas.isNotEmpty()) encuadrar(zonas)
+        mapaOsm.setTileSource(TileSourceFactory.MAPNIK)
+        mapaOsm.setMultiTouchControls(true)
+        mapaOsm.setUseDataConnection(true)
+        mapaOsm.controller.setZoom(IquiqueCatalogo.ZOOM_POR_DEFECTO)
+        mapaOsm.controller.setCenter(IquiqueCatalogo.CENTRO)
     }
 
     private fun configurarFiltro() {
-        val spinner = findViewById<Spinner>(R.id.spinnerCategoriaMapa)
-        filtroCategoria = spinner
-        spinner.adapter = ArrayAdapter(
+        filtroCategoria = findViewById(R.id.spinnerCategoriaMapa)
+        filtroCategoria.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
             listOf(getString(R.string.filtro_todas_categorias)) + IquiqueCatalogo.CATEGORIAS,
         )
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        filtroCategoria.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
                 cargarZonas()
             }
@@ -119,18 +143,89 @@ class MapsActivity : AppCompatActivity() {
         }
     }
 
-    private fun encuadrar(zonas: List<Zona>) {
+    private fun cargarZonas() {
+        val posicion = filtroCategoria.selectedItemPosition
+
+        Tareas.consultar({
+            if (posicion > 0) zonaDao.porCategoria(IquiqueCatalogo.CATEGORIAS[posicion - 1])
+            else zonaDao.listar()
+        }) { zonas ->
+            if (zonas.isEmpty()) return@consultar
+            dibujarZonas(zonas)
+        }
+    }
+
+    private fun dibujarZonas(zonas: List<Zona>) {
+        if (googleMap != null) {
+            dibujarEnGoogle(zonas)
+        } else {
+            dibujarEnOsm(zonas)
+        }
+    }
+
+    private fun dibujarEnGoogle(zonas: List<Zona>) {
+        val mapa = googleMap ?: return
+        mapa.clear()
+        zonasPorId.clear()
+
+        for (zona in zonas) {
+            val opciones = MarkerOptions()
+                .position(LatLng(zona.latitud, zona.longitud))
+                .title(zona.nombre)
+                .snippet(zona.descripcion)
+
+            mapa.addMarker(opciones)?.tag = zona.id.toString()
+            zonasPorId[zona.id.toString()] = zona
+        }
+
+        // En esta version de la libreria el listener va en el mapa, no en el marcador.
+        mapa.setOnMarkerClickListener { marcador ->
+            val zona = marcador.tag as? String
+            if (zona == null) return@setOnMarkerClickListener false
+
+            val encontrada = zonasPorId[zona] ?: return@setOnMarkerClickListener false
+            abrirZona(encontrada)
+            true
+        }
+
+        val limites = LatLngBounds.builder()
+            .apply { zonas.forEach { include(LatLng(it.latitud, it.longitud)) } }
+            .build()
+
+        mapa.moveCamera(CameraUpdateFactory.newLatLngBounds(limites, 80))
+    }
+
+    private fun dibujarEnOsm(zonas: List<Zona>) {
+        mapaOsm.overlays.removeAll(marcadoresOsm)
+        marcadoresOsm.clear()
+
+        for (zona in zonas) {
+            val marcador = Marker(mapaOsm)
+            marcador.position = zona.posicion
+            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marcador.setTitle(zona.nombre)
+            marcador.setSnippet(zona.descripcion)
+            marcador.setOnMarkerClickListener { _, _ ->
+                abrirZona(zona)
+                true
+            }
+            mapaOsm.overlays.add(marcador)
+            marcadoresOsm.add(marcador)
+        }
+
         val latMin = zonas.minOf { it.latitud }
         val latMax = zonas.maxOf { it.latitud }
         val lonMin = zonas.minOf { it.longitud }
         val lonMax = zonas.maxOf { it.longitud }
 
-        val limites = BoundingBox(latMax, lonMax, latMin, lonMin)
-
-        mapa.post {
-            runCatching { mapa.zoomToBoundingBox(limites, false, 64) }
-                .onFailure { avisar(getString(R.string.error_encuadre)) }
+        mapaOsm.post {
+            runCatching {
+                mapaOsm.zoomToBoundingBox(
+                    BoundingBox(latMax, lonMax, latMin, lonMin), false, 64
+                )
+            }.onFailure { avisar(getString(R.string.error_encuadre)) }
         }
+        mapaOsm.invalidate()
     }
 
     private fun abrirZona(zona: Zona) {
@@ -156,40 +251,46 @@ class MapsActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
 
-                val punto = GeoPoint(ubicacion.latitude, ubicacion.longitude)
+                val punto = LatLng(ubicacion.latitude, ubicacion.longitude)
+                googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(punto, IquiqueCatalogo.ZOOM_USUARIO.toFloat()))
 
-                if (marcadorUbicacion == null) {
-                    val marcador = Marker(mapa)
-                    marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                    mapa.overlays.add(marcador)
-                    marcadorUbicacion = marcador
-                }
-
-                marcadorUbicacion?.apply {
-                    position = punto
-                    title = getString(R.string.ubicacion_actual)
-                }
-
-                mapa.controller.setZoom(IquiqueCatalogo.ZOOM_USUARIO)
-                mapa.controller.animateTo(punto)
-                mapa.invalidate()
+                mostrarEnOsm(ubicacion.latitude, ubicacion.longitude)
             }
             .addOnFailureListener {
                 avisar(getString(R.string.error_sin_ubicacion))
             }
     }
 
+    private fun mostrarEnOsm(latitud: Double, longitud: Double) {
+        if (googleMap != null) return
+
+        val punto = GeoPoint(latitud, longitud)
+        if (marcadorUbicacion == null) {
+            val marcador = Marker(mapaOsm)
+            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            mapaOsm.overlays.add(marcador)
+            marcadorUbicacion = marcador
+        }
+        marcadorUbicacion?.apply {
+            position = punto
+            title = getString(R.string.ubicacion_actual)
+        }
+        mapaOsm.controller.setZoom(IquiqueCatalogo.ZOOM_USUARIO)
+        mapaOsm.controller.animateTo(punto)
+        mapaOsm.invalidate()
+    }
+
     private fun avisar(mensaje: String) {
-        Snackbar.make(mapa, mensaje, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(contenedor, mensaje, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onResume() {
         super.onResume()
-        mapa.onResume()
+        mapaOsm.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapa.onPause()
+        mapaOsm.onPause()
     }
 }

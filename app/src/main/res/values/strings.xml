@@ -68,6 +68,8 @@
     <string name="zona_reclamos">%1$d reclamos</string>
     <string name="zona_guardada">Zona actualizada</string>
     <string name="zona_eliminada">Zona eliminada</string>
+    <string name="mapa_google">Google Maps</string>
+    <string name="mapa_respaldo">OpenStreetMap</string>
     <string name="coordenadas">Latitud %1$.4f, longitud %2$.4f</string>
     <string name="sensor_acelerometro">Acelerómetro: X %1$.2f, Y %2$.2f</string>
 </resources>
