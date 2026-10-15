@@ -20,6 +20,18 @@ object PlayasTarapaca {
             longitud = -70.1469015,
             descripcion = "Playa ancha y tranquila al sur del centro, protegida por los cerros.",
         ),
+        Playa(
+            nombre = "Plaza Prat",
+            latitud = -20.2148,
+            longitud = -70.1415,
+            descripcion = "Plaza central de Iquique, punto histórico.",
+        ),
+        Playa(
+            nombre = "Museo Corbeta Esmeralda",
+            latitud = -20.2085,
+            longitud = -70.1505,
+            descripcion = "Réplica del buque insignia de Arturo Prat.",
+        ),
     )
 
     const val ZOOM_POR_DEFECTO = 12.0
