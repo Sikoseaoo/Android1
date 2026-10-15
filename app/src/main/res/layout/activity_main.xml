@@ -4,72 +4,211 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fondoApp">
+    android:background="@color/fondoApp"
+    android:padding="24dp">
 
     <TextView
         android:id="@+id/inicioTitulo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:fontFamily="@font/alkatra_medium"
         android:text="@string/inicio_titulo"
         android:textColor="@color/textoPrimario"
-        android:textSize="26sp"
-        app:layout_constraintBottom_toTopOf="@id/inicioSubtitulo"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/inicioSubtitulo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="4dp"
         android:text="@string/inicio_subtitulo"
         android:textColor="@color/textoSecundario"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/botonMapa"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inicioTitulo" />
 
-    <Button
+    <androidx.cardview.widget.CardView
         android:id="@+id/botonMapa"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/inicio_mapa"
-        app:layout_constraintBottom_toTopOf="@id/botonApoyos"
+        android:layout_marginTop="32dp"
+        app:cardBackgroundColor="@color/fondoTarjeta"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inicioSubtitulo" />
+        app:layout_constraintTop_toBottomOf="@id/inicioSubtitulo">
 
-    <Button
-        android:id="@+id/botonApoyos"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/iconoMapa"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:contentDescription="@string/inicio_mapa"
+                android:src="@drawable/ic_mapa"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tituloMapa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/inicio_mapa"
+                android:textColor="@color/textoPrimario"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toTopOf="@id/subtituloMapa"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconoMapa"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/subtituloMapa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/mapa_descripcion"
+                android:textColor="@color/textoSecundario"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconoMapa"
+                app:layout_constraintTop_toBottomOf="@id/tituloMapa" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/botonReclamos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/inicio_apoyos"
-        app:layout_constraintBottom_toTopOf="@id/botonPerfil"
+        app:cardBackgroundColor="@color/fondoTarjeta"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/botonMapa" />
+        app:layout_constraintTop_toBottomOf="@id/botonMapa">
 
-    <Button
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/iconoReclamos"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:contentDescription="@string/inicio_reclamos"
+                android:src="@drawable/ic_reclamo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tituloReclamos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/inicio_reclamos"
+                android:textColor="@color/textoPrimario"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toTopOf="@id/subtituloReclamos"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconoReclamos"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/subtituloReclamos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/reclamos_descripcion"
+                android:textColor="@color/textoSecundario"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconoReclamos"
+                app:layout_constraintTop_toBottomOf="@id/tituloReclamos" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/botonPerfil"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/inicio_perfil"
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="@color/fondoTarjeta"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/botonApoyos" />
+        app:layout_constraintTop_toBottomOf="@id/botonReclamos">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/iconoPerfil"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:contentDescription="@string/inicio_perfil"
+                android:src="@drawable/ic_perfil"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tituloPerfil"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/inicio_perfil"
+                android:textColor="@color/textoPrimario"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toTopOf="@id/subtituloPerfil"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconoPerfil"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/subtituloPerfil"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/perfil_descripcion"
+                android:textColor="@color/textoSecundario"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iconoPerfil"
+                app:layout_constraintTop_toBottomOf="@id/tituloPerfil" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

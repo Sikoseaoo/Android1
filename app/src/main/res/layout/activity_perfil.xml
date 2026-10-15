@@ -40,7 +40,7 @@
             android:background="@drawable/avatar_circulo"
             android:gravity="center"
             android:text="@string/perfil_inicial"
-            android:textColor="@color/acentoCielo"
+            android:textColor="@color/acentoClaro"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
             app:cardBackgroundColor="@color/fondoTarjeta"
             app:cardCornerRadius="14dp"
             app:cardElevation="0dp"
-            app:layout_constraintEnd_toStartOf="@id/tarjetaApoyos"
+            app:layout_constraintEnd_toStartOf="@id/tarjetaReclamos"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/perfilRegion">
 
@@ -129,7 +129,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/tarjetaApoyos"
+            android:id="@+id/tarjetaReclamos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -146,7 +146,7 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/perfilApoyos"
+                    android:id="@+id/perfilReclamos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textoPrimario"
@@ -157,15 +157,15 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/perfilApoyosRotulo"
+                    android:id="@+id/perfilReclamosRotulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/perfil_apoyos"
+                    android:text="@string/perfil_reclamos"
                     android:textColor="@color/textoSecundario"
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/perfilApoyos" />
+                    app:layout_constraintTop_toBottomOf="@id/perfilReclamos" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

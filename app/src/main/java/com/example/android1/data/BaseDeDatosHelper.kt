@@ -13,16 +13,20 @@ class BaseDeDatosHelper(contexto: Context) : SQLiteOpenHelper(
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(ContratoIquique.CREAR_ZONA)
-        db.execSQL(ContratoIquique.CREAR_APOYO)
+        db.execSQL(ContratoIquique.CREAR_REPORTE)
         db.execSQL(ContratoIquique.CREAR_INDICE)
-        db.execSQL("DELETE FROM ${ContratoIquique.Zona.TABLA}")
+
         for (zona in IquiqueCatalogo.ZONAS) {
             ZonaDao(db).insertar(zona)
         }
     }
 
+    /**
+     * La version 2 renombro la tabla de apoyos a reportes, asi que los datos
+     * de la version 1 se descartan y se vuelve a cargar el catalogo de zonas.
+     */
     override fun onUpgrade(db: SQLiteDatabase, anterior: Int, nueva: Int) {
-        db.execSQL("DROP TABLE IF EXISTS ${ContratoIquique.Apoyo.TABLA}")
+        db.execSQL("DROP TABLE IF EXISTS ${ContratoIquique.Reporte.TABLA}")
         db.execSQL("DROP TABLE IF EXISTS ${ContratoIquique.Zona.TABLA}")
         onCreate(db)
     }

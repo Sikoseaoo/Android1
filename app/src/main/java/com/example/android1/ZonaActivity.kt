@@ -20,9 +20,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android1.data.Apoyo
-import com.example.android1.data.ApoyoDao
 import com.example.android1.data.IquiqueCatalogo
+import com.example.android1.data.Reporte
+import com.example.android1.data.ReporteDao
 import com.example.android1.data.Zona
 import com.example.android1.data.ZonaDao
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -34,12 +34,12 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var acelerometro: Sensor? = null
 
-    private val apoyoDao by lazy { ApoyoDao(this) }
+    private val reporteDao by lazy { ReporteDao(this) }
     private val zonaDao by lazy { ZonaDao(this) }
 
     private var zonaId: Long = 0
     private var zonaActual: Zona? = null
-    private val apoyos = mutableListOf<Apoyo>()
+    private val reclamos = mutableListOf<Reporte>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,20 +55,34 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         findViewById<View>(R.id.botonVolverZona).setOnClickListener { finish() }
-
-        val lista = findViewById<RecyclerView>(R.id.listaApoyosZona)
-        lista.layoutManager = LinearLayoutManager(this)
-        lista.adapter = Adaptador()
-
-        findViewById<FloatingActionButton>(R.id.botonApoyarZona).setOnClickListener {
-            abrirFormulario()
-        }
-
         findViewById<View>(R.id.botonVerMapa).setOnClickListener { abrirEnMapaExterno() }
         findViewById<View>(R.id.botonEditarZona).setOnClickListener { abrirEdicion() }
         findViewById<View>(R.id.botonBorrarZona).setOnClickListener { confirmarBorrado() }
+        findViewById<FloatingActionButton>(R.id.botonNuevoReclamoZona).setOnClickListener {
+            abrirFormulario()
+        }
+
+        val lista = findViewById<RecyclerView>(R.id.listaReclamosZona)
+        lista.layoutManager = LinearLayoutManager(this)
+        lista.adapter = Adaptador()
 
         cargarZona()
+    }
+
+    private fun abrirEnMapaExterno() {
+        val zona = zonaActual ?: return
+        val uri = Uri.parse(
+            "geo:${zona.latitud},${zona.longitud}" +
+                "?q=${zona.latitud},${zona.longitud}(${Uri.encode(zona.nombre)})"
+        )
+
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }.onFailure {
+            Toast.makeText(
+                this, getString(R.string.error_abrir_mapa, zona.nombre), Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun abrirEdicion() {
@@ -137,29 +151,13 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
             .setNegativeButton(R.string.cancelar, null)
             .setPositiveButton(R.string.eliminar) { _, _ ->
                 Tareas.ejecutar {
-                    apoyoDao.eliminarPorZona(zonaId)
+                    reporteDao.eliminarPorZona(zonaId)
                     zonaDao.eliminar(zonaId)
                 }
                 Toast.makeText(this, R.string.zona_eliminada, Toast.LENGTH_SHORT).show()
                 finish()
             }
             .show()
-    }
-
-    private fun abrirEnMapaExterno() {
-        val zona = zonaActual ?: return
-        val uri = Uri.parse(
-            "geo:${zona.latitud},${zona.longitud}" +
-                "?q=${zona.latitud},${zona.longitud}(${Uri.encode(zona.nombre)})"
-        )
-
-        runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-        }.onFailure {
-            Toast.makeText(
-                this, getString(R.string.error_abrir_mapa, zona.nombre), Toast.LENGTH_LONG
-            ).show()
-        }
     }
 
     private fun cargarZona() {
@@ -178,24 +176,24 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
                 getString(R.string.coordenadas, zona.latitud, zona.longitud)
         }
 
-        Tareas.consultar({ apoyoDao.porZona(zonaId) }) { resultado ->
-            apoyos.clear()
-            apoyos.addAll(resultado)
-            findViewById<RecyclerView>(R.id.listaApoyosZona).adapter?.notifyDataSetChanged()
-            findViewById<TextView>(R.id.zonaApoyos).text =
-                getString(R.string.zona_apoyos, resultado.size)
+        Tareas.consultar({ reporteDao.porZona(zonaId) }) { resultado ->
+            reclamos.clear()
+            reclamos.addAll(resultado)
+            findViewById<RecyclerView>(R.id.listaReclamosZona).adapter?.notifyDataSetChanged()
+            findViewById<TextView>(R.id.zonaReclamos).text =
+                getString(R.string.zona_reclamos, resultado.size)
         }
     }
 
     private fun abrirFormulario() {
-        val vista = LayoutInflater.from(this).inflate(R.layout.dialog_apoyo, null)
+        val vista = LayoutInflater.from(this).inflate(R.layout.dialog_reclamo, null)
         val spinnerCategoria = vista.findViewById<Spinner>(R.id.spinnerFormCategoria)
         val campoAutor = vista.findViewById<EditText>(R.id.campoAutor)
         val campoMensaje = vista.findViewById<EditText>(R.id.campoMensaje)
 
         vista.findViewById<Spinner>(R.id.spinnerFormZona).isEnabled = false
-        spinnerCategoria.adapter = android.widget.ArrayAdapter(
-            this, android.R.layout.simple_spinner_dropdown_item, Apoyo.CATEGORIAS
+        spinnerCategoria.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_dropdown_item, Reporte.CATEGORIAS
         )
 
         val dialogo = MaterialAlertDialogBuilder(this)
@@ -219,16 +217,16 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
                 return@setOnClickListener
             }
 
-            val apoyo = Apoyo(
+            val reclamo = Reporte(
                 id = 0,
                 zonaId = zonaId,
                 autor = autor,
-                categoria = Apoyo.CATEGORIAS[spinnerCategoria.selectedItemPosition],
+                categoria = Reporte.CATEGORIAS[spinnerCategoria.selectedItemPosition],
                 mensaje = mensaje,
                 fecha = Date(),
             )
 
-            Tareas.ejecutar { apoyoDao.insertar(apoyo) }
+            Tareas.ejecutar { reporteDao.insertar(reclamo) }
             dialogo.dismiss()
             cargarZona()
         }
@@ -260,32 +258,34 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
     private inner class Adaptador : RecyclerView.Adapter<Adaptador.Fila>() {
 
         inner class Fila(inflada: View) : RecyclerView.ViewHolder(inflada) {
-            val autor: TextView = inflada.findViewById(R.id.itemAutor)
-            val fecha: TextView = inflada.findViewById(R.id.itemFecha)
             val categoria: TextView = inflada.findViewById(R.id.itemCategoria)
+            val fecha: TextView = inflada.findViewById(R.id.itemFecha)
+            val zona: TextView = inflada.findViewById(R.id.itemZona)
             val mensaje: TextView = inflada.findViewById(R.id.itemMensaje)
+            val autor: TextView = inflada.findViewById(R.id.itemAutor)
             val borrar: ImageButton = inflada.findViewById(R.id.botonBorrar)
         }
 
         override fun onCreateViewHolder(padre: ViewGroup, tipo: Int): Fila {
             val inflada = LayoutInflater.from(padre.context)
-                .inflate(R.layout.item_apoyo, padre, false)
+                .inflate(R.layout.item_reclamo, padre, false)
             return Fila(inflada)
         }
 
         override fun onBindViewHolder(fila: Fila, posicion: Int) {
-            val apoyo = apoyos[posicion]
-            fila.autor.text = apoyo.autor
-            fila.fecha.text = apoyo.fechaTexto
-            fila.categoria.text = apoyo.categoria
-            fila.mensaje.text = apoyo.mensaje
+            val reclamo = reclamos[posicion]
+            fila.categoria.text = reclamo.categoria
+            fila.fecha.text = reclamo.fechaTexto
+            fila.zona.text = reclamo.zonaNombre
+            fila.mensaje.text = reclamo.mensaje
+            fila.autor.text = reclamo.autor
             fila.borrar.setOnClickListener {
-                Tareas.ejecutar { apoyoDao.eliminar(apoyo.id) }
+                Tareas.ejecutar { reporteDao.eliminar(reclamo.id) }
                 cargarZona()
             }
         }
 
-        override fun getItemCount(): Int = apoyos.size
+        override fun getItemCount(): Int = reclamos.size
     }
 
     companion object {

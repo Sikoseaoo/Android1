@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-data class Apoyo(
+data class Reporte(
     val id: Long,
     val zonaId: Long,
     val autor: String,
@@ -17,11 +17,13 @@ data class Apoyo(
 
     companion object {
         val CATEGORIAS = listOf(
-            "Me encanta",
-            "Es parte de mi barrio",
-            "Convive con la naturaleza",
-            "Hay que cuidarla",
-            "Vale la pena visitarla",
+            "Contaminacion",
+            "Basura",
+            "Limpieza",
+            "Obras",
+            "Servicios",
+            "Ruido",
+            "Seguridad",
         )
 
         private val FORMATO = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())

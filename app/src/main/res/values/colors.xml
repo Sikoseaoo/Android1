@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="negro">#FF000000</color>
-    <color name="blanco">#FFFFFFFF</color>
+    <color name="fondoApp">#FF0F1115</color>
+    <color name="fondoTarjeta">#FF191D26</color>
+    <color name="superficie">#FF212633</color>
+    <color name="textoPrimario">#FFF3F5F9</color>
+    <color name="textoSecundario">#FF98A2B3</color>
+    <color name="textoTenue">#FF667085</color>
 
-    <color name="fondoApp">#FF101014</color>
-    <color name="fondoTarjeta">#FF16181D</color>
-    <color name="textoPrimario">#FFECE2E3</color>
-    <color name="textoSecundario">#FF9A9AA0</color>
-    <color name="acentoCielo">#FFA6C6D6</color>
-    <color name="separador">#26FFFFFF</color>
+    <color name="acento">#FFFF7043</color>
+    <color name="acentoOscuro">#FFE85A2C</color>
+    <color name="acentoClaro">#FFFFAB91</color>
+    <color name="acentoTransparente">#33FF7043</color>
+
+    <color name="info">#FF4FC3F7</color>
+    <color name="exito">#FF4ADE80</color>
+    <color name="peligro">#FFF87171</color>
+
+    <color name="separador">#1FFFFFFF</color>
+    <color name="bordeSuave">#26FFFFFF</color>
+    <color name="blanco">#FFFFFFFF</color>
+    <color name="negro">#FF000000</color>
 </resources>

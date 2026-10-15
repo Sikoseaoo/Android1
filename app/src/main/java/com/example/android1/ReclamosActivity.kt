@@ -15,8 +15,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android1.data.Apoyo
-import com.example.android1.data.ApoyoDao
+import com.example.android1.data.Reporte
+import com.example.android1.data.ReporteDao
 import com.example.android1.data.Zona
 import com.example.android1.data.ZonaDao
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -24,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import java.util.Date
 
-class ApoyosActivity : AppCompatActivity() {
+class ReclamosActivity : AppCompatActivity() {
 
     private lateinit var lista: RecyclerView
     private lateinit var contador: TextView
@@ -33,46 +33,35 @@ class ApoyosActivity : AppCompatActivity() {
     private lateinit var filtroCategoria: Spinner
     private lateinit var busqueda: EditText
 
-    private val apoyoDao by lazy { ApoyoDao(this) }
+    private val reporteDao by lazy { ReporteDao(this) }
     private val zonaDao by lazy { ZonaDao(this) }
 
     private var zonas: List<Zona> = emptyList()
-    private val apoyos = mutableListOf<Apoyo>()
+    private val reclamos = mutableListOf<Reporte>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_apoyos)
+        setContentView(R.layout.activity_reclamos)
 
-        findViewById<View>(R.id.botonVolverApoyos).setOnClickListener { finish() }
+        findViewById<View>(R.id.botonVolverReclamos).setOnClickListener { finish() }
 
-        contador = findViewById(R.id.contadorApoyos)
-        vacio = findViewById(R.id.vacioApoyos)
-        lista = findViewById(R.id.listaApoyos)
+        contador = findViewById(R.id.contadorReclamos)
+        vacio = findViewById(R.id.vacioReclamos)
+        lista = findViewById(R.id.listaReclamos)
         lista.layoutManager = LinearLayoutManager(this)
         lista.adapter = Adaptador()
 
         filtroZona = findViewById(R.id.spinnerZona)
-        filtroZona.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
-                if (zonas.isNotEmpty()) cargar()
-            }
-
-            override fun onNothingSelected(padre: AdapterView<*>?) = Unit
-        }
-
         filtroCategoria = findViewById(R.id.spinnerCategoria)
+
+        filtroZona.onItemSelectedListener = alCambiarFiltro()
+        filtroCategoria.onItemSelectedListener = alCambiarFiltro()
+
         filtroCategoria.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
-            listOf(getString(R.string.filtro_todos_motivos)) + Apoyo.CATEGORIAS,
+            listOf(getString(R.string.filtro_todos_motivos)) + Reporte.CATEGORIAS,
         )
-        filtroCategoria.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
-                if (zonas.isNotEmpty()) cargar()
-            }
-
-            override fun onNothingSelected(padre: AdapterView<*>?) = Unit
-        }
 
         busqueda = findViewById(R.id.campoBusqueda)
         busqueda.addTextChangedListener(object : TextWatcher {
@@ -83,16 +72,24 @@ class ApoyosActivity : AppCompatActivity() {
             }
         })
 
-        findViewById<FloatingActionButton>(R.id.botonNuevoApoyo).setOnClickListener {
+        findViewById<FloatingActionButton>(R.id.botonNuevoReclamo).setOnClickListener {
             abrirFormulario(null)
         }
 
         cargarZonas()
     }
 
+    private fun alCambiarFiltro() = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
+            if (zonas.isNotEmpty()) cargar()
+        }
+
+        override fun onNothingSelected(padre: AdapterView<*>?) = Unit
+    }
+
     private fun cargarZonas() {
-        Tareas.consultar({ zonaDao.listar() }) { lista ->
-            zonas = lista
+        Tareas.consultar({ zonaDao.listar() }) { resultado ->
+            zonas = resultado
             filtroZona.adapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -109,24 +106,24 @@ class ApoyosActivity : AppCompatActivity() {
 
         val zonaId = if (zonaSeleccionada in zonas.indices) zonas[zonaSeleccionada].id else null
         val categoria = if (categoriaSeleccionada >= 0) {
-            Apoyo.CATEGORIAS[categoriaSeleccionada]
+            Reporte.CATEGORIAS[categoriaSeleccionada]
         } else {
             null
         }
 
-        Tareas.consultar({ apoyoDao.filtrar(zonaId, categoria, texto) }) { resultado ->
-            apoyos.clear()
-            apoyos.addAll(resultado)
+        Tareas.consultar({ reporteDao.filtrar(zonaId, categoria, texto) }) { resultado ->
+            reclamos.clear()
+            reclamos.addAll(resultado)
             lista.adapter?.notifyDataSetChanged()
-            contador.text = getString(R.string.apoyos_contador, apoyos.size)
-            vacio.visibility = if (apoyos.isEmpty()) View.VISIBLE else View.GONE
+            contador.text = getString(R.string.reclamos_contador, reclamos.size)
+            vacio.visibility = if (reclamos.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 
-    private fun abrirFormulario(apoyo: Apoyo?) {
+    private fun abrirFormulario(reclamo: Reporte?) {
         if (zonas.isEmpty()) return
 
-        val vista = LayoutInflater.from(this).inflate(R.layout.dialog_apoyo, null)
+        val vista = LayoutInflater.from(this).inflate(R.layout.dialog_reclamo, null)
         val spinnerZona = vista.findViewById<Spinner>(R.id.spinnerFormZona)
         val spinnerCategoria = vista.findViewById<Spinner>(R.id.spinnerFormCategoria)
         val campoAutor = vista.findViewById<EditText>(R.id.campoAutor)
@@ -136,20 +133,18 @@ class ApoyosActivity : AppCompatActivity() {
             this, android.R.layout.simple_spinner_dropdown_item, zonas.map { it.nombre }
         )
         spinnerCategoria.adapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_dropdown_item, Apoyo.CATEGORIAS
+            this, android.R.layout.simple_spinner_dropdown_item, Reporte.CATEGORIAS
         )
 
-        if (apoyo != null) {
-            campoAutor.setText(apoyo.autor)
-            campoMensaje.setText(apoyo.mensaje)
-            spinnerZona.setSelection(zonas.indexOfFirst { it.id == apoyo.zonaId }.coerceAtLeast(0))
-            spinnerCategoria.setSelection(Apoyo.CATEGORIAS.indexOf(apoyo.categoria).coerceAtLeast(0))
+        if (reclamo != null) {
+            campoAutor.setText(reclamo.autor)
+            campoMensaje.setText(reclamo.mensaje)
+            spinnerZona.setSelection(zonas.indexOfFirst { it.id == reclamo.zonaId }.coerceAtLeast(0))
+            spinnerCategoria.setSelection(Reporte.CATEGORIAS.indexOf(reclamo.categoria).coerceAtLeast(0))
         }
 
         val dialogo = MaterialAlertDialogBuilder(this)
-            .setTitle(
-                if (apoyo == null) R.string.form_titulo_nuevo else R.string.form_titulo_editar
-            )
+            .setTitle(if (reclamo == null) R.string.form_titulo_nuevo else R.string.form_titulo_editar)
             .setView(vista)
             .setNegativeButton(R.string.cancelar, null)
             .setPositiveButton(R.string.guardar, null)
@@ -169,31 +164,31 @@ class ApoyosActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val registro = Apoyo(
-                id = apoyo?.id ?: 0,
+            val registro = Reporte(
+                id = reclamo?.id ?: 0,
                 zonaId = zonas[spinnerZona.selectedItemPosition].id,
                 autor = autor,
-                categoria = Apoyo.CATEGORIAS[spinnerCategoria.selectedItemPosition],
+                categoria = Reporte.CATEGORIAS[spinnerCategoria.selectedItemPosition],
                 mensaje = mensaje,
-                fecha = apoyo?.fecha ?: Date(),
+                fecha = reclamo?.fecha ?: Date(),
             )
 
             Tareas.ejecutar {
-                if (apoyo == null) apoyoDao.insertar(registro) else apoyoDao.actualizar(registro)
+                if (reclamo == null) reporteDao.insertar(registro) else reporteDao.actualizar(registro)
             }
-            avisar(getString(R.string.apoyo_guardado))
+            avisar(getString(R.string.reclamo_guardado))
             dialogo.dismiss()
             cargar()
         }
     }
 
-    private fun confirmarBorrado(apoyo: Apoyo) {
+    private fun confirmarBorrado(reclamo: Reporte) {
         MaterialAlertDialogBuilder(this)
             .setMessage(R.string.confirmar_eliminar)
             .setNegativeButton(R.string.cancelar, null)
             .setPositiveButton(R.string.eliminar) { _, _ ->
-                Tareas.ejecutar { apoyoDao.eliminar(apoyo.id) }
-                avisar(getString(R.string.apoyo_eliminado))
+                Tareas.ejecutar { reporteDao.eliminar(reclamo.id) }
+                avisar(getString(R.string.reclamo_eliminado))
                 cargar()
             }
             .show()
@@ -206,32 +201,32 @@ class ApoyosActivity : AppCompatActivity() {
     private inner class Adaptador : RecyclerView.Adapter<Adaptador.Fila>() {
 
         inner class Fila(inflada: View) : RecyclerView.ViewHolder(inflada) {
-            val autor: TextView = inflada.findViewById(R.id.itemAutor)
+            val categoria: TextView = inflada.findViewById(R.id.itemCategoria)
             val fecha: TextView = inflada.findViewById(R.id.itemFecha)
             val zona: TextView = inflada.findViewById(R.id.itemZona)
-            val categoria: TextView = inflada.findViewById(R.id.itemCategoria)
             val mensaje: TextView = inflada.findViewById(R.id.itemMensaje)
+            val autor: TextView = inflada.findViewById(R.id.itemAutor)
             val editar: ImageButton = inflada.findViewById(R.id.botonEditar)
             val borrar: ImageButton = inflada.findViewById(R.id.botonBorrar)
         }
 
         override fun onCreateViewHolder(padre: ViewGroup, tipo: Int): Fila {
             val inflada = LayoutInflater.from(padre.context)
-                .inflate(R.layout.item_apoyo, padre, false)
+                .inflate(R.layout.item_reclamo, padre, false)
             return Fila(inflada)
         }
 
         override fun onBindViewHolder(fila: Fila, posicion: Int) {
-            val apoyo = apoyos[posicion]
-            fila.autor.text = apoyo.autor
-            fila.fecha.text = apoyo.fechaTexto
-            fila.zona.text = apoyo.zonaNombre
-            fila.categoria.text = apoyo.categoria
-            fila.mensaje.text = apoyo.mensaje
-            fila.editar.setOnClickListener { abrirFormulario(apoyo) }
-            fila.borrar.setOnClickListener { confirmarBorrado(apoyo) }
+            val reclamo = reclamos[posicion]
+            fila.categoria.text = reclamo.categoria
+            fila.fecha.text = reclamo.fechaTexto
+            fila.zona.text = reclamo.zonaNombre
+            fila.mensaje.text = reclamo.mensaje
+            fila.autor.text = reclamo.autor
+            fila.editar.setOnClickListener { abrirFormulario(reclamo) }
+            fila.borrar.setOnClickListener { confirmarBorrado(reclamo) }
         }
 
-        override fun getItemCount(): Int = apoyos.size
+        override fun getItemCount(): Int = reclamos.size
     }
 }

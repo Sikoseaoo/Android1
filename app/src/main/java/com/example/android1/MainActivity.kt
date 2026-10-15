@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         abrir(R.id.botonMapa, MapsActivity::class.java)
-        abrir(R.id.botonApoyos, ApoyosActivity::class.java)
+        abrir(R.id.botonReclamos, ReclamosActivity::class.java)
         abrir(R.id.botonPerfil, PerfilActivity::class.java)
     }
 

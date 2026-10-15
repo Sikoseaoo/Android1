@@ -1,43 +1,46 @@
 <resources>
-    <string name="app_name">Iquique Somos</string>
+    <string name="app_name">Reclamos Iquique</string>
 
-    <string name="inicio_titulo">Iquique Somos</string>
-    <string name="inicio_subtitulo">Apoya las zonas de tu ciudad</string>
+    <string name="inicio_titulo">Reclamos Iquique</string>
+    <string name="inicio_subtitulo">Denuncia y pide mejoras en tu ciudad</string>
     <string name="inicio_mapa">Mapa de Iquique</string>
-    <string name="inicio_apoyos">Apoyos</string>
+    <string name="inicio_reclamos">Reclamos</string>
     <string name="inicio_perfil">Perfil</string>
 
-    <string name="titulo_apoyos">Apoyos</string>
+    <string name="mapa_descripcion">Ver las zonas con reclamos</string>
+    <string name="reclamos_descripcion">Publicar y seguir tus reclamos</string>
+    <string name="perfil_descripcion">Resumen de lo que has publicado</string>
+
+    <string name="titulo_reclamos">Reclamos</string>
     <string name="titulo_zona">Zona</string>
     <string name="titulo_perfil">Perfil</string>
     <string name="volver">Volver</string>
-    <string name="apoyos_contador">%1$d apoyos registrados</string>
-    <string name="apoyos_vacios">Todavía no hay apoyos en esta zona</string>
+    <string name="reclamos_contador">%1$d reclamos registrados</string>
+    <string name="reclamos_vacios">Todavía no hay reclamos en esta zona</string>
 
     <string name="filtro_todas">Todas las zonas</string>
     <string name="filtro_todas_categorias">Todas</string>
-    <string name="zona_apoyos">%1$d apoyos</string>
     <string name="filtro_todos_motivos">Todos los motivos</string>
     <string name="buscar_hint">Buscar por mensaje o autor</string>
-    <string name="nuevo_apoyo">Nuevo apoyo</string>
+    <string name="nuevo_reclamo">Nuevo reclamo</string>
 
-    <string name="form_titulo_nuevo">Nuevo apoyo</string>
-    <string name="form_titulo_editar">Editar apoyo</string>
+    <string name="form_titulo_nuevo">Nuevo reclamo</string>
+    <string name="form_titulo_editar">Editar reclamo</string>
     <string name="form_zona">Zona</string>
     <string name="form_autor">Tu nombre</string>
     <string name="form_autor_hint">Cómo te llamas</string>
     <string name="form_categoria">Motivo</string>
-    <string name="form_mensaje">Mensaje</string>
-    <string name="form_mensaje_hint">Cuenta por qué apoyas esta zona</string>
-    <string name="form_error_mensaje">El mensaje no puede estar vacío</string>
+    <string name="form_mensaje">Descripción</string>
+    <string name="form_mensaje_hint">Cuenta qué pasa en esa zona</string>
+    <string name="form_error_mensaje">La descripción no puede estar vacía</string>
     <string name="form_error_autor">Escribe tu nombre</string>
     <string name="guardar">Guardar</string>
     <string name="cancelar">Cancelar</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
-    <string name="confirmar_eliminar">¿Eliminar este apoyo?</string>
-    <string name="apoyo_eliminado">Apoyo eliminado</string>
-    <string name="apoyo_guardado">Apoyo guardado</string>
+    <string name="confirmar_eliminar">¿Eliminar este reclamo?</string>
+    <string name="reclamo_eliminado">Reclamo eliminado</string>
+    <string name="reclamo_guardado">Reclamo guardado</string>
 
     <string name="btn_mi_ubicacion">Centrar en mi ubicación</string>
     <string name="ubicacion_actual">Mi ubicación</string>
@@ -48,10 +51,10 @@
 
     <string name="perfil_nombre">Visitante</string>
     <string name="perfil_email">visitante@ejemplo.cl</string>
-    <string name="perfil_region">Iquique, Region de Tarapaca</string>
+    <string name="perfil_region">Iquique, Región de Tarapacá</string>
     <string name="perfil_inicial">V</string>
     <string name="perfil_zonas">Zonas</string>
-    <string name="perfil_apoyos">Apoyos</string>
+    <string name="perfil_reclamos">Reclamos</string>
 
     <string name="ver_en_mapa">Ver en una app de mapas</string>
     <string name="form_titulo_zona">Editar zona</string>
@@ -61,9 +64,10 @@
     <string name="form_longitud_hint">Longitud</string>
     <string name="form_error_nombre">El nombre no puede estar vacío</string>
     <string name="form_error_coordenadas">Revisa la latitud y la longitud</string>
-    <string name="confirmar_eliminar_zona">Se borrará la zona y todos sus apoyos. ¿Continuar?</string>
+    <string name="confirmar_eliminar_zona">Se borrará la zona y todos sus reclamos. ¿Continuar?</string>
+    <string name="zona_reclamos">%1$d reclamos</string>
     <string name="zona_guardada">Zona actualizada</string>
     <string name="zona_eliminada">Zona eliminada</string>
     <string name="coordenadas">Latitud %1$.4f, longitud %2$.4f</string>
-    <string name="sensor_acelerometro">Acelerometro: X %1$.2f, Y %2$.2f</string>
+    <string name="sensor_acelerometro">Acelerómetro: X %1$.2f, Y %2$.2f</string>
 </resources>

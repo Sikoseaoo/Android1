@@ -8,124 +8,133 @@
     android:background="@color/fondoApp">
 
     <TextView
-        android:id="@+id/tituloApoyos"
+        android:id="@+id/tituloReclamos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
         android:fontFamily="@font/alkatra_medium"
-        android:text="@string/titulo_apoyos"
+        android:text="@string/titulo_reclamos"
         android:textColor="@color/textoPrimario"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@id/botonVolverApoyos"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toStartOf="@id/botonVolverReclamos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/botonVolverApoyos"
+        android:id="@+id/botonVolverReclamos"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_marginEnd="12dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/volver"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        app:layout_constraintBottom_toBottomOf="@id/tituloApoyos"
+        android:src="@drawable/ic_volver"
+        app:layout_constraintBottom_toBottomOf="@id/tituloReclamos"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tituloApoyos" />
+        app:layout_constraintTop_toTopOf="@id/tituloReclamos" />
 
     <Spinner
         android:id="@+id/spinnerZona"
+        style="@style/CampoTexto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/campo_texto"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="24dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tituloApoyos" />
+        app:layout_constraintTop_toBottomOf="@id/tituloReclamos" />
 
     <Spinner
         android:id="@+id/spinnerCategoria"
+        style="@style/CampoTexto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/campo_texto"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerZona" />
 
     <EditText
         android:id="@+id/campoBusqueda"
+        style="@style/CampoTexto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
         android:autofillHints=""
-        android:background="@drawable/campo_texto"
+        android:drawableStart="@drawable/ic_lupa"
+        android:drawablePadding="10dp"
         android:hint="@string/buscar_hint"
         android:imeOptions="actionSearch"
         android:inputType="text"
-        android:padding="14dp"
-        android:textColor="@color/textoPrimario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerCategoria" />
 
     <TextView
-        android:id="@+id/contadorApoyos"
+        android:id="@+id/contadorReclamos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/textoSecundario"
-        android:textSize="13sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="24dp"
+        android:letterSpacing="0.04"
+        android:textColor="@color/textoTenue"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/campoBusqueda"
-        tools:text="12 apoyos registrados" />
+        tools:text="12 RECLAMOS REGISTRADOS" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listaApoyos"
+        android:id="@+id/listaReclamos"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="88dp"
+        android:paddingBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contadorApoyos" />
+        app:layout_constraintTop_toBottomOf="@id/contadorReclamos" />
 
     <TextView
-        android:id="@+id/vacioApoyos"
-        android:layout_width="wrap_content"
+        android:id="@+id/vacioReclamos"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/apoyos_vacios"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:gravity="center"
+        android:text="@string/reclamos_vacios"
         android:textColor="@color/textoSecundario"
         android:textSize="15sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/listaApoyos"
+        app:layout_constraintBottom_toBottomOf="@id/listaReclamos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/listaApoyos" />
+        app:layout_constraintTop_toTopOf="@id/listaReclamos" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/botonNuevoApoyo"
+        android:id="@+id/botonNuevoReclamo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:contentDescription="@string/nuevo_apoyo"
-        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="@string/nuevo_reclamo"
+        android:src="@drawable/ic_mas"
+        app:backgroundTint="@color/acento"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/blanco" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

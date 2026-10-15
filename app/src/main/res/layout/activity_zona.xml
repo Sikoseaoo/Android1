@@ -11,11 +11,11 @@
         android:id="@+id/botonVolverZona"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="26dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/volver"
-        android:src="@android:drawable/ic_menu_revert"
+        android:src="@drawable/ic_volver"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,29 +23,29 @@
         android:id="@+id/zonaNombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="24dp"
         android:fontFamily="@font/alkatra_medium"
         android:textColor="@color/textoPrimario"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@id/botonVolverZona"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/botonVolverZona"
         app:layout_constraintTop_toTopOf="@id/botonVolverZona"
-        app:layout_constraintBottom_toBottomOf="@id/botonVolverZona"
         tools:text="Plaza Prat" />
 
     <TextView
         android:id="@+id/zonaCategoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="22dp"
         android:background="@drawable/etiqueta_categoria"
-        android:paddingStart="10dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/acentoCielo"
+        android:paddingStart="12dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/acentoClaro"
         android:textSize="11sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/botonVolverZona"
@@ -55,10 +55,10 @@
         android:id="@+id/zonaDescripcion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp"
-        android:lineSpacingExtra="3dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="24dp"
+        android:lineSpacingExtra="4dp"
         android:textColor="@color/textoSecundario"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,98 +66,110 @@
         app:layout_constraintTop_toBottomOf="@id/zonaCategoria" />
 
     <TextView
-        android:id="@+id/zonaCoordenadas"
+        android:id="@+id/zonaReclamos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/separador"
-        android:textSize="12sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/acentoClaro"
+        android:textSize="13sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zonaDescripcion"
+        tools:text="3 reclamos" />
+
+    <TextView
+        android:id="@+id/zonaCoordenadas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/textoTenue"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/zonaReclamos"
         tools:text="-20.2148, -70.1415" />
 
     <TextView
         android:id="@+id/zonaSensor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/textoSecundario"
-        android:textSize="12sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/textoTenue"
+        android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zonaCoordenadas"
-        tools:text="Acelerometro: 0.00 m/s2" />
+        tools:text="Acelerometro: X 0.00, Y 0.00" />
 
-    <TextView
-        android:id="@+id/zonaApoyos"
+    <LinearLayout
+        android:id="@+id/botonesZona"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/acentoCielo"
-        android:textSize="13sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/zonaSensor"
-        tools:text="3 apoyos" />
-
-    <Button
-        android:id="@+id/botonVerMapa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/ver_en_mapa"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/zonaApoyos" />
+        app:layout_constraintTop_toBottomOf="@id/zonaSensor">
 
         <Button
-        android:id="@+id/botonEditarZona"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/editar"
-        app:layout_constraintBottom_toBottomOf="@id/botonVerMapa"
-        app:layout_constraintStart_toEndOf="@id/botonVerMapa"
-        app:layout_constraintTop_toTopOf="@id/botonVerMapa" />
+            android:id="@+id/botonVerMapa"
+            style="@style/BotonSecundario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/ver_en_mapa" />
 
         <Button
-        android:id="@+id/botonBorrarZona"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/eliminar"
-        app:layout_constraintBottom_toBottomOf="@id/botonVerMapa"
-        app:layout_constraintStart_toEndOf="@id/botonEditarZona"
-        app:layout_constraintTop_toTopOf="@id/botonVerMapa" />
+            android:id="@+id/botonEditarZona"
+            style="@style/BotonSecundario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/editar" />
+
+        <Button
+            android:id="@+id/botonBorrarZona"
+            style="@style/BotonSecundario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eliminar" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listaApoyosZona"
+        android:id="@+id/listaReclamosZona"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:clipToPadding="false"
-        android:paddingBottom="88dp"
+        android:paddingBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/botonVerMapa" />
+        app:layout_constraintTop_toBottomOf="@id/botonesZona" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/botonApoyarZona"
+        android:id="@+id/botonNuevoReclamoZona"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:contentDescription="@string/nuevo_apoyo"
-        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="@string/nuevo_reclamo"
+        android:src="@drawable/ic_mas"
+        app:backgroundTint="@color/acento"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/blanco" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

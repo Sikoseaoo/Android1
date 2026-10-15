@@ -4,10 +4,10 @@ import android.provider.BaseColumns
 
 object ContratoIquique {
 
-    const val VERSION = 1
+    const val VERSION = 2
     const val NOMBRE_BASE = "iquique.db"
 
-    /** Zona de Iquique que la comunidad puede apoyar. */
+    /** Zona de Iquique donde la gente puede denunciar o pedir mejora. */
     object Zona : BaseColumns {
         const val ID = BaseColumns._ID
         const val TABLA = "zona"
@@ -20,10 +20,10 @@ object ContratoIquique {
         val COLUMNAS = arrayOf(ID, NOMBRE, CATEGORIA, LATITUD, LONGITUD, DESCRIPCION)
     }
 
-    /** Comentario de apoyo que alguien deja sobre una zona. */
-    object Apoyo : BaseColumns {
+    /** Reclamo o queja que alguien deja sobre una zona. */
+    object Reporte : BaseColumns {
         const val ID = BaseColumns._ID
-        const val TABLA = "apoyo"
+        const val TABLA = "reporte"
         const val ZONA_ID = "zona_id"
         const val AUTOR = "autor"
         const val CATEGORIA = "categoria"
@@ -44,18 +44,18 @@ object ContratoIquique {
         )
     """
 
-    const val CREAR_APOYO = """
-        CREATE TABLE ${Apoyo.TABLA} (
-            ${Apoyo.ID}        INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${Apoyo.ZONA_ID}   INTEGER NOT NULL,
-            ${Apoyo.AUTOR}     TEXT    NOT NULL,
-            ${Apoyo.CATEGORIA} TEXT    NOT NULL,
-            ${Apoyo.MENSAJE}   TEXT    NOT NULL,
-            ${Apoyo.FECHA}     INTEGER NOT NULL,
-            FOREIGN KEY (${Apoyo.ZONA_ID}) REFERENCES ${Zona.TABLA}(${Zona.ID})
+    const val CREAR_REPORTE = """
+        CREATE TABLE ${Reporte.TABLA} (
+            ${Reporte.ID}        INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${Reporte.ZONA_ID}   INTEGER NOT NULL,
+            ${Reporte.AUTOR}     TEXT    NOT NULL,
+            ${Reporte.CATEGORIA} TEXT    NOT NULL,
+            ${Reporte.MENSAJE}   TEXT    NOT NULL,
+            ${Reporte.FECHA}     INTEGER NOT NULL,
+            FOREIGN KEY (${Reporte.ZONA_ID}) REFERENCES ${Zona.TABLA}(${Zona.ID})
         )
     """
 
     const val CREAR_INDICE =
-        "CREATE INDEX idx_apoyo_zona ON ${Apoyo.TABLA}(${Apoyo.ZONA_ID})"
+        "CREATE INDEX idx_reporte_zona ON ${Reporte.TABLA}(${Reporte.ZONA_ID})"
 }

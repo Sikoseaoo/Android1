@@ -11,83 +11,73 @@
 
         <EditText
             android:id="@+id/campoZonaNombre"
+            style="@style/CampoTexto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:autofillHints=""
-            android:background="@drawable/campo_texto"
             android:hint="@string/form_zona_nombre_hint"
             android:inputType="textCapWords"
-            android:padding="14dp"
-            android:textColor="@color/textoPrimario"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/rotuloZonaCategoria"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            style="@style/RotuloCampo"
+            android:layout_marginTop="20dp"
             android:text="@string/form_categoria"
-            android:textColor="@color/textoSecundario"
-            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/campoZonaNombre" />
 
         <Spinner
             android:id="@+id/spinnerZonaCategoria"
+            style="@style/CampoTexto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/campo_texto"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
+            android:layout_marginTop="8dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rotuloZonaCategoria" />
 
         <EditText
             android:id="@+id/campoZonaDescripcion"
+            style="@style/CampoTexto"
             android:layout_width="0dp"
             android:layout_height="110dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/campo_texto"
+            android:layout_marginTop="20dp"
             android:gravity="top"
             android:hint="@string/form_zona_descripcion_hint"
             android:inputType="textMultiLine"
-            android:padding="14dp"
-            android:textColor="@color/textoPrimario"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinnerZonaCategoria" />
 
         <EditText
             android:id="@+id/campoZonaLatitud"
+            style="@style/CampoTexto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="6dp"
             android:autofillHints=""
-            android:background="@drawable/campo_texto"
             android:hint="@string/form_latitud_hint"
             android:inputType="numberDecimal|numberSigned"
-            android:padding="14dp"
-            android:textColor="@color/textoPrimario"
             app:layout_constraintEnd_toStartOf="@id/campoZonaLongitud"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/campoZonaDescripcion" />
 
         <EditText
             android:id="@+id/campoZonaLongitud"
+            style="@style/CampoTexto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:autofillHints=""
-            android:background="@drawable/campo_texto"
             android:hint="@string/form_longitud_hint"
             android:inputType="numberDecimal|numberSigned"
-            android:padding="14dp"
-            android:textColor="@color/textoPrimario"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/campoZonaLatitud"
             app:layout_constraintTop_toTopOf="@id/campoZonaLatitud" />
