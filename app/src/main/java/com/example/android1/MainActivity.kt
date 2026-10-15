@@ -10,8 +10,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        abrir(R.id.botonPlayas, MapsActivity::class.java)
-        abrir(R.id.botonReportes, ReportesActivity::class.java)
+        abrir(R.id.botonMapa, MapsActivity::class.java)
+        abrir(R.id.botonApoyos, ApoyosActivity::class.java)
         abrir(R.id.botonPerfil, PerfilActivity::class.java)
     }
 

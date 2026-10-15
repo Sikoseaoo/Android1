@@ -1,8 +1,16 @@
 package com.example.android1.data
 
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
+
 object IquiqueCatalogo {
 
     val CATEGORIAS = listOf("Playa", "Plaza", "Histórico", "Naturaleza", "Comercio")
+
+    const val ZOOM_POR_DEFECTO = 12.0
+    const val ZOOM_USUARIO = 15.0
+
+    val CENTRO = GeoPoint(-20.2141, -70.1439)
 
     val ZONAS = listOf(
         Zona(

@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.android1.data.PlayasTarapaca
-import com.example.android1.data.ReportesAlmacen
+import com.example.android1.data.ApoyoDao
+import com.example.android1.data.ZonaDao
 
 class PerfilActivity : AppCompatActivity() {
+
+    private val zonaDao by lazy { ZonaDao(this) }
+    private val apoyoDao by lazy { ApoyoDao(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,20 +18,13 @@ class PerfilActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.botonVolver).setOnClickListener { finish() }
 
-        val nombre = findViewById<TextView>(R.id.perfilNombre)
-        val email = findViewById<TextView>(R.id.perfilEmail)
-        val region = findViewById<TextView>(R.id.perfilRegion)
-        val playas = findViewById<TextView>(R.id.perfilPlayas)
-        val reportes = findViewById<TextView>(R.id.perfilReportes)
+        findViewById<TextView>(R.id.perfilNombre).text = getString(R.string.perfil_nombre)
+        findViewById<TextView>(R.id.perfilEmail).text = getString(R.string.perfil_email)
+        findViewById<TextView>(R.id.perfilRegion).text = getString(R.string.perfil_region)
 
-        nombre.text = getString(R.string.perfil_nombre)
-        email.text = getString(R.string.perfil_email)
-        region.text = getString(R.string.perfil_region)
-
-        val cantidadPlayas = PlayasTarapaca.todas.size
-        val cantidadReportes = ReportesAlmacen.leer(this).size
-
-        playas.text = getString(R.string.perfil_playas_numeradas, cantidadPlayas)
-        reportes.text = getString(R.string.perfil_reportes_numerados, cantidadReportes)
+        Tareas.consultar({ zonaDao.contar() to apoyoDao.contar() }) { (zonas, apoyos) ->
+            findViewById<TextView>(R.id.perfilZonas).text = zonas.toString()
+            findViewById<TextView>(R.id.perfilApoyos).text = apoyos.toString()
+        }
     }
 }

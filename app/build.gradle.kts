@@ -37,6 +37,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.core.ktx)
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
     implementation(libs.material)
 
     implementation("org.osmdroid:osmdroid-android:6.1.20")

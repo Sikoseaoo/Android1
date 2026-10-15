@@ -1,28 +1,39 @@
 <resources>
-    <string name="app_name">Tarapaca</string>
+    <string name="app_name">Iquique Somos</string>
 
-    <string name="inicio_titulo">Bienvenido a Tarapaca</string>
-    <string name="inicio_subtitulo">Informacion de las playas de la region</string>
-    <string name="inicio_playas">Playas</string>
-    <string name="inicio_reportes">Reportes</string>
+    <string name="inicio_titulo">Iquique Somos</string>
+    <string name="inicio_subtitulo">Apoya las zonas de tu ciudad</string>
+    <string name="inicio_mapa">Mapa de Iquique</string>
+    <string name="inicio_apoyos">Apoyos</string>
     <string name="inicio_perfil">Perfil</string>
 
-    <string name="titulo_reportes">Reportes</string>
+    <string name="titulo_apoyos">Apoyos</string>
+    <string name="titulo_zona">Zona</string>
     <string name="titulo_perfil">Perfil</string>
     <string name="volver">Volver</string>
-    <string name="reportes_contador">%1$d reportes registrados</string>
+    <string name="apoyos_contador">%1$d apoyos registrados</string>
+    <string name="apoyos_vacios">Todavía no hay apoyos en esta zona</string>
 
-    <string name="filtro_todas">Todas</string>
-    <string name="nuevo_reporte">Nuevo reporte</string>
+    <string name="filtro_todas">Todas las zonas</string>
+    <string name="nuevo_apoyo">Nuevo apoyo</string>
 
-    <string name="form_titulo">Nuevo reporte</string>
-    <string name="form_playa">Playa</string>
-    <string name="form_categoria">Categoría</string>
-    <string name="form_descripcion">Descripción</string>
-    <string name="form_descripcion_hint">Describe lo que encontraste</string>
-    <string name="form_error_descripcion">La descripción no puede estar vacía</string>
+    <string name="form_titulo_nuevo">Nuevo apoyo</string>
+    <string name="form_titulo_editar">Editar apoyo</string>
+    <string name="form_zona">Zona</string>
+    <string name="form_autor">Tu nombre</string>
+    <string name="form_autor_hint">Cómo te llamas</string>
+    <string name="form_categoria">Motivo</string>
+    <string name="form_mensaje">Mensaje</string>
+    <string name="form_mensaje_hint">Cuenta por qué apoyas esta zona</string>
+    <string name="form_error_mensaje">El mensaje no puede estar vacío</string>
+    <string name="form_error_autor">Escribe tu nombre</string>
     <string name="guardar">Guardar</string>
     <string name="cancelar">Cancelar</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="confirmar_eliminar">¿Eliminar este apoyo?</string>
+    <string name="apoyo_eliminado">Apoyo eliminado</string>
+    <string name="apoyo_guardado">Apoyo guardado</string>
 
     <string name="btn_mi_ubicacion">Centrar en mi ubicación</string>
     <string name="ubicacion_actual">Mi ubicación</string>
@@ -33,10 +44,12 @@
 
     <string name="perfil_nombre">Visitante</string>
     <string name="perfil_email">visitante@ejemplo.cl</string>
-    <string name="perfil_region">Region de Tarapaca, Chile</string>
+    <string name="perfil_region">Iquique, Region de Tarapaca</string>
     <string name="perfil_inicial">V</string>
-    <string name="perfil_playas">Playas</string>
-    <string name="perfil_reportes">Reportes</string>
-    <string name="perfil_playas_numeradas">%1$d</string>
-    <string name="perfil_reportes_numerados">%1$d</string>
+    <string name="perfil_zonas">Zonas</string>
+    <string name="perfil_apoyos">Apoyos</string>
+
+    <string name="ver_en_mapa">Ver en una app de mapas</string>
+    <string name="coordenadas">Latitud %1$.4f, longitud %2$.4f</string>
+    <string name="sensor_acelerometro">Acelerometro: X %1$.2f, Y %2$.2f</string>
 </resources>

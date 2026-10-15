@@ -1,31 +1,27 @@
 package com.example.android1
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 
 object Ubicacion {
 
+    private var cliente: FusedLocationProviderClient? = null
+
     fun permisoConcedido(contexto: Context): Boolean =
         ContextCompat.checkSelfPermission(contexto, Manifest.permission.ACCESS_FINE_LOCATION) ==
-            android.content.pm.PackageManager.PERMISSION_GRANTED
+            PackageManager.PERMISSION_GRANTED
 
-    @Suppress("MissingPermission")
-    fun ultima(contexto: Context): Location? {
-        if (!permisoConcedido(contexto)) return null
+    @SuppressLint("MissingPermission")
+    fun ultima(contexto: Context): Task<Location> = obtenerCliente(contexto).lastLocation
 
-        val gestor = contexto.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val proveedores = listOf(
-            LocationManager.GPS_PROVIDER,
-            LocationManager.NETWORK_PROVIDER,
-            LocationManager.PASSIVE_PROVIDER,
-        )
-
-        return proveedores
-            .filter { gestor.isProviderEnabled(it) }
-            .mapNotNull { gestor.getLastKnownLocation(it) }
-            .maxByOrNull { it.time }
-    }
+    private fun obtenerCliente(contexto: Context): FusedLocationProviderClient =
+        cliente ?: LocationServices.getFusedLocationProviderClient(contexto.applicationContext)
+            .also { cliente = it }
 }

@@ -2,16 +2,17 @@ package com.example.android1
 
 import android.Manifest
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.example.android1.data.Playa
-import com.example.android1.data.PlayasTarapaca
+import com.example.android1.data.IquiqueCatalogo
+import com.example.android1.data.Zona
+import com.example.android1.data.ZonaDao
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
@@ -21,16 +22,13 @@ import java.io.File
 class MapsActivity : AppCompatActivity() {
 
     private lateinit var mapa: MapView
+    private val zonaDao by lazy { ZonaDao(this) }
 
     private var marcadorUbicacion: Marker? = null
 
     private val pedirPermiso =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { concedido ->
-            if (concedido) {
-                centrarEnMiUbicacion()
-            } else {
-                avisar(getString(R.string.error_permiso_ubicacion))
-            }
+            if (concedido) centrarEnMiUbicacion() else avisar(getString(R.string.error_permiso_ubicacion))
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,11 +41,10 @@ class MapsActivity : AppCompatActivity() {
         mapa.setTileSource(TileSourceFactory.MAPNIK)
         mapa.setMultiTouchControls(true)
         mapa.setUseDataConnection(true)
-        mapa.controller.setZoom(PlayasTarapaca.ZOOM_POR_DEFECTO)
-        mapa.controller.setCenter(PlayasTarapaca.CENTRO)
+        mapa.controller.setZoom(IquiqueCatalogo.ZOOM_POR_DEFECTO)
+        mapa.controller.setCenter(IquiqueCatalogo.CENTRO)
 
-        dibujarPlayas()
-        encuadrarPlayas()
+        cargarZonas()
 
         findViewById<FloatingActionButton>(R.id.botonMiUbicacion).setOnClickListener {
             pedirUbicacion()
@@ -64,42 +61,48 @@ class MapsActivity : AppCompatActivity() {
         configuracion.osmdroidTileCache = File(base, "tiles")
     }
 
-    private fun dibujarPlayas() {
-        for (playa in PlayasTarapaca.todas) {
-            val marcador = Marker(mapa)
-            marcador.position = playa.posicion
-            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marcador.setTitle(playa.nombre)
-            marcador.setSnippet(playa.descripcion)
-            marcador.infoWindow = MarkerInfoWindow(R.layout.ventana_playa, mapa)
-            marcador.setOnMarkerClickListener { _, _ ->
-                abrirEnMapa(playa)
-                true
+    private fun cargarZonas() {
+        Tareas.consultar({ zonaDao.listar() }) { zonas ->
+            if (zonas.isEmpty()) return@consultar
+
+            for (zona in zonas) {
+                val marcador = Marker(mapa)
+                marcador.position = zona.posicion
+                marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                marcador.setTitle(zona.nombre)
+                marcador.setSnippet(zona.descripcion)
+                marcador.infoWindow = MarkerInfoWindow(R.layout.ventana_zona, mapa)
+                marcador.setOnMarkerClickListener { _, _ ->
+                    abrirZona(zona)
+                    true
+                }
+                mapa.overlays.add(marcador)
             }
-            mapa.overlays.add(marcador)
+
+            mapa.invalidate()
+            encuadrar(zonas)
         }
     }
 
-    private fun abrirEnMapa(playa: Playa) {
-        val uri = Uri.parse(
-            "geo:${playa.latitud},${playa.longitud}" +
-                "?q=${playa.latitud},${playa.longitud}(${Uri.encode(playa.nombre)})"
-        )
+    private fun encuadrar(zonas: List<Zona>) {
+        val latMin = zonas.minOf { it.latitud }
+        val latMax = zonas.maxOf { it.latitud }
+        val lonMin = zonas.minOf { it.longitud }
+        val lonMax = zonas.maxOf { it.longitud }
 
-        runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-        }.onFailure {
-            avisar(getString(R.string.error_abrir_mapa, playa.nombre))
-        }
-    }
-
-    private fun encuadrarPlayas() {
-        val limites = PlayasTarapaca.limites() ?: return
+        val limites = BoundingBox(latMax, lonMax, latMin, lonMin)
 
         mapa.post {
             runCatching { mapa.zoomToBoundingBox(limites, false, 64) }
                 .onFailure { avisar(getString(R.string.error_encuadre)) }
         }
+    }
+
+    private fun abrirZona(zona: Zona) {
+        startActivity(
+            Intent(this, ZonaActivity::class.java)
+                .putExtra(ZonaActivity.EXTRA_ZONA_ID, zona.id)
+        )
     }
 
     private fun pedirUbicacion() {
@@ -111,29 +114,34 @@ class MapsActivity : AppCompatActivity() {
     }
 
     private fun centrarEnMiUbicacion() {
-        val ubicacion = Ubicacion.ultima(this)
+        Ubicacion.ultima(this)
+            .addOnSuccessListener { ubicacion ->
+                if (ubicacion == null) {
+                    avisar(getString(R.string.error_sin_ubicacion))
+                    return@addOnSuccessListener
+                }
 
-        if (ubicacion == null) {
-            avisar(getString(R.string.error_sin_ubicacion))
-            return
-        }
+                val punto = GeoPoint(ubicacion.latitude, ubicacion.longitude)
 
-        val punto = GeoPoint(ubicacion.latitude, ubicacion.longitude)
+                if (marcadorUbicacion == null) {
+                    val marcador = Marker(mapa)
+                    marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    mapa.overlays.add(marcador)
+                    marcadorUbicacion = marcador
+                }
 
-        if (marcadorUbicacion == null) {
-            val marcador = Marker(mapa)
-            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            mapa.overlays.add(marcador)
-            marcadorUbicacion = marcador
-        }
+                marcadorUbicacion?.apply {
+                    position = punto
+                    title = getString(R.string.ubicacion_actual)
+                }
 
-        marcadorUbicacion?.apply {
-            position = punto
-            title = getString(R.string.ubicacion_actual)
-        }
-
-        mapa.controller.setZoom(PlayasTarapaca.ZOOM_USUARIO)
-        mapa.controller.animateTo(punto)
+                mapa.controller.setZoom(IquiqueCatalogo.ZOOM_USUARIO)
+                mapa.controller.animateTo(punto)
+                mapa.invalidate()
+            }
+            .addOnFailureListener {
+                avisar(getString(R.string.error_sin_ubicacion))
+            }
     }
 
     private fun avisar(mensaje: String) {
