@@ -3,6 +3,10 @@ package com.example.android1
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android1.data.IquiqueCatalogo
@@ -24,7 +28,9 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var mapa: MapView
     private val zonaDao by lazy { ZonaDao(this) }
 
+    private val marcadoresZona = mutableListOf<Marker>()
     private var marcadorUbicacion: Marker? = null
+    private var filtroCategoria: Spinner? = null
 
     private val pedirPermiso =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { concedido ->
@@ -44,6 +50,7 @@ class MapsActivity : AppCompatActivity() {
         mapa.controller.setZoom(IquiqueCatalogo.ZOOM_POR_DEFECTO)
         mapa.controller.setCenter(IquiqueCatalogo.CENTRO)
 
+        configurarFiltro()
         cargarZonas()
 
         findViewById<FloatingActionButton>(R.id.botonMiUbicacion).setOnClickListener {
@@ -62,25 +69,53 @@ class MapsActivity : AppCompatActivity() {
     }
 
     private fun cargarZonas() {
-        Tareas.consultar({ zonaDao.listar() }) { zonas ->
-            if (zonas.isEmpty()) return@consultar
+        val posicion = filtroCategoria?.selectedItemPosition ?: 0
 
-            for (zona in zonas) {
-                val marcador = Marker(mapa)
-                marcador.position = zona.posicion
-                marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                marcador.setTitle(zona.nombre)
-                marcador.setSnippet(zona.descripcion)
-                marcador.infoWindow = MarkerInfoWindow(R.layout.ventana_zona, mapa)
-                marcador.setOnMarkerClickListener { _, _ ->
-                    abrirZona(zona)
-                    true
-                }
-                mapa.overlays.add(marcador)
+        Tareas.consultar({
+            if (posicion > 0) zonaDao.porCategoria(IquiqueCatalogo.CATEGORIAS[posicion - 1])
+            else zonaDao.listar()
+        }) { zonas ->
+            pintarMarcadores(zonas)
+        }
+    }
+
+    private fun pintarMarcadores(zonas: List<Zona>) {
+        mapa.overlays.removeAll(marcadoresZona)
+        marcadoresZona.clear()
+
+        for (zona in zonas) {
+            val marcador = Marker(mapa)
+            marcador.position = zona.posicion
+            marcador.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marcador.setTitle(zona.nombre)
+            marcador.setSnippet(zona.descripcion)
+            marcador.infoWindow = MarkerInfoWindow(R.layout.ventana_zona, mapa)
+            marcador.setOnMarkerClickListener { _, _ ->
+                abrirZona(zona)
+                true
+            }
+            mapa.overlays.add(marcador)
+            marcadoresZona.add(marcador)
+        }
+
+        mapa.invalidate()
+        if (zonas.isNotEmpty()) encuadrar(zonas)
+    }
+
+    private fun configurarFiltro() {
+        val spinner = findViewById<Spinner>(R.id.spinnerCategoriaMapa)
+        filtroCategoria = spinner
+        spinner.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            listOf(getString(R.string.filtro_todas_categorias)) + IquiqueCatalogo.CATEGORIAS,
+        )
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
+                cargarZonas()
             }
 
-            mapa.invalidate()
-            encuadrar(zonas)
+            override fun onNothingSelected(padre: AdapterView<*>?) = Unit
         }
     }
 

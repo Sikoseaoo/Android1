@@ -67,12 +67,6 @@ class ApoyoDao private constructor(private val db: SQLiteDatabase) {
         db.rawQuery("SELECT COUNT(*) FROM ${ContratoIquique.Apoyo.TABLA}", null)
             .use { if (it.moveToFirst()) it.getInt(0) else 0 }
 
-    fun contarPorZona(zonaId: Long): Int =
-        db.rawQuery(
-            "SELECT COUNT(*) FROM ${ContratoIquique.Apoyo.TABLA} WHERE ${ContratoIquique.Apoyo.ZONA_ID} = ?",
-            arrayOf(zonaId.toString()),
-        ).use { if (it.moveToFirst()) it.getInt(0) else 0 }
-
     private fun consultar(seleccion: String?, argumentos: Array<String>?, orden: String?): List<Apoyo> {
         val consulta = """
             SELECT

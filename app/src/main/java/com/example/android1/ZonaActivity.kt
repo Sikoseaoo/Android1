@@ -103,6 +103,8 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
             apoyos.clear()
             apoyos.addAll(resultado)
             findViewById<RecyclerView>(R.id.listaApoyosZona).adapter?.notifyDataSetChanged()
+            findViewById<TextView>(R.id.zonaApoyos).text =
+                getString(R.string.zona_apoyos, resultado.size)
         }
     }
 

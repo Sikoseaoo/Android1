@@ -93,6 +93,20 @@
         app:layout_constraintTop_toBottomOf="@id/zonaCoordenadas"
         tools:text="Acelerometro: 0.00 m/s2" />
 
+    <TextView
+        android:id="@+id/zonaApoyos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/acentoCielo"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/zonaSensor"
+        tools:text="3 apoyos" />
+
     <Button
         android:id="@+id/botonVerMapa"
         android:layout_width="wrap_content"
@@ -101,7 +115,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/ver_en_mapa"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/zonaSensor" />
+        app:layout_constraintTop_toBottomOf="@id/zonaApoyos" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaApoyosZona"

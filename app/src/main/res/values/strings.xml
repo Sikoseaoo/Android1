@@ -15,6 +15,8 @@
     <string name="apoyos_vacios">Todavía no hay apoyos en esta zona</string>
 
     <string name="filtro_todas">Todas las zonas</string>
+    <string name="filtro_todas_categorias">Todas</string>
+    <string name="zona_apoyos">%1$d apoyos</string>
     <string name="filtro_todos_motivos">Todos los motivos</string>
     <string name="buscar_hint">Buscar por mensaje o autor</string>
     <string name="nuevo_apoyo">Nuevo apoyo</string>
