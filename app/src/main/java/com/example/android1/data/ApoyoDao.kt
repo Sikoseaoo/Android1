@@ -40,7 +40,11 @@ class ApoyoDao private constructor(private val db: SQLiteDatabase) {
             argumentos += "%$texto%"
         }
 
-        return consultar(condiciones.joinToString(" AND "), argumentos.toTypedArray(), null)
+        return consultar(
+            condiciones.takeIf { it.isNotEmpty() }?.joinToString(" AND "),
+            argumentos.toTypedArray(),
+            null,
+        )
     }
 
     fun porId(id: Long): Apoyo? = consultar("${ContratoIquique.Apoyo.ID} = ?", arrayOf("$id"), null).firstOrNull()

@@ -203,11 +203,6 @@ class ApoyosActivity : AppCompatActivity() {
         Snackbar.make(lista, mensaje, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Tareas.cerrar()
-    }
-
     private inner class Adaptador : RecyclerView.Adapter<Adaptador.Fila>() {
 
         inner class Fila(inflada: View) : RecyclerView.ViewHolder(inflada) {
