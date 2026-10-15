@@ -114,7 +114,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun configurarOsmdroid() {
         val configuracion = Configuration.getInstance()
         configuracion.load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
-        configuracion.userAgentValue = packageName
+
+        // OSM rechaza las peticiones con un user agent generico, por eso se
+        // identifica la app y su version.
+        configuracion.userAgentValue = USER_AGENT
 
         val base = File(cacheDir, "osmdroid")
         configuracion.osmdroidBasePath = base
@@ -292,5 +295,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onPause() {
         super.onPause()
         mapaOsm.onPause()
+    }
+
+    companion object {
+        private const val USER_AGENT = "ReclamosIquique/1.0 (Android; proyecto escolar)"
     }
 }
