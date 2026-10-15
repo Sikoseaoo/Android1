@@ -1,6 +1,8 @@
 package com.example.android1
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +30,8 @@ class ApoyosActivity : AppCompatActivity() {
     private lateinit var contador: TextView
     private lateinit var vacio: TextView
     private lateinit var filtroZona: Spinner
+    private lateinit var filtroCategoria: Spinner
+    private lateinit var busqueda: EditText
 
     private val apoyoDao by lazy { ApoyoDao(this) }
     private val zonaDao by lazy { ZonaDao(this) }
@@ -56,6 +60,29 @@ class ApoyosActivity : AppCompatActivity() {
             override fun onNothingSelected(padre: AdapterView<*>?) = Unit
         }
 
+        filtroCategoria = findViewById(R.id.spinnerCategoria)
+        filtroCategoria.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            listOf(getString(R.string.filtro_todos_motivos)) + Apoyo.CATEGORIAS,
+        )
+        filtroCategoria.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
+                if (zonas.isNotEmpty()) cargar()
+            }
+
+            override fun onNothingSelected(padre: AdapterView<*>?) = Unit
+        }
+
+        busqueda = findViewById(R.id.campoBusqueda)
+        busqueda.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
+            override fun afterTextChanged(s: Editable?) {
+                if (zonas.isNotEmpty()) cargar()
+            }
+        })
+
         findViewById<FloatingActionButton>(R.id.botonNuevoApoyo).setOnClickListener {
             abrirFormulario(null)
         }
@@ -76,14 +103,18 @@ class ApoyosActivity : AppCompatActivity() {
     }
 
     private fun cargar() {
-        val seleccion = filtroZona.selectedItemPosition - 1
-        Tareas.consultar({
-            if (seleccion >= 0 && seleccion < zonas.size) {
-                apoyoDao.porZona(zonas[seleccion].id)
-            } else {
-                apoyoDao.listar()
-            }
-        }) { resultado ->
+        val zonaSeleccionada = filtroZona.selectedItemPosition - 1
+        val categoriaSeleccionada = filtroCategoria.selectedItemPosition - 1
+        val texto = busqueda.text.toString().trim()
+
+        val zonaId = if (zonaSeleccionada in zonas.indices) zonas[zonaSeleccionada].id else null
+        val categoria = if (categoriaSeleccionada >= 0) {
+            Apoyo.CATEGORIAS[categoriaSeleccionada]
+        } else {
+            null
+        }
+
+        Tareas.consultar({ apoyoDao.filtrar(zonaId, categoria, texto) }) { resultado ->
             apoyos.clear()
             apoyos.addAll(resultado)
             lista.adapter?.notifyDataSetChanged()

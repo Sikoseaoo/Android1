@@ -14,17 +14,34 @@ class ApoyoDao private constructor(private val db: SQLiteDatabase) {
 
     fun listar(): List<Apoyo> = consultar(null, null, null)
 
-    fun porZona(zonaId: Long): List<Apoyo> = consultar("${ContratoIquique.Apoyo.ZONA_ID} = ?", arrayOf("$zonaId"), null)
+    fun porZona(zonaId: Long): List<Apoyo> =
+        consultar("${T}.${ContratoIquique.Apoyo.ZONA_ID} = ?", arrayOf("$zonaId"), null)
 
-    fun porCategoria(categoria: String): List<Apoyo> =
-        consultar("${ContratoIquique.Apoyo.CATEGORIA} = ?", arrayOf(categoria), null)
+    /**
+     * Filtra por zona, motivo y texto libre. Los tres criterios son opcionales y
+     * se arman con selectionArgs para no concatenar valores en la consulta.
+     */
+    fun filtrar(zonaId: Long?, categoria: String?, texto: String?): List<Apoyo> {
+        val condiciones = mutableListOf<String>()
+        val argumentos = mutableListOf<String>()
 
-    fun buscar(texto: String): List<Apoyo> =
-        consultar(
-            "${ContratoIquique.Apoyo.MENSAJE} LIKE ? OR ${ContratoIquique.Apoyo.AUTOR} LIKE ?",
-            arrayOf("%$texto%", "%$texto%"),
-            null,
-        )
+        if (zonaId != null) {
+            condiciones += "${T}.${ContratoIquique.Apoyo.ZONA_ID} = ?"
+            argumentos += zonaId.toString()
+        }
+        if (!categoria.isNullOrEmpty()) {
+            condiciones += "${T}.${ContratoIquique.Apoyo.CATEGORIA} = ?"
+            argumentos += categoria
+        }
+        if (!texto.isNullOrEmpty()) {
+            condiciones += "(${T}.${ContratoIquique.Apoyo.MENSAJE} LIKE ?" +
+                " OR ${T}.${ContratoIquique.Apoyo.AUTOR} LIKE ?)"
+            argumentos += "%$texto%"
+            argumentos += "%$texto%"
+        }
+
+        return consultar(condiciones.joinToString(" AND "), argumentos.toTypedArray(), null)
+    }
 
     fun porId(id: Long): Apoyo? = consultar("${ContratoIquique.Apoyo.ID} = ?", arrayOf("$id"), null).firstOrNull()
 
@@ -59,11 +76,10 @@ class ApoyoDao private constructor(private val db: SQLiteDatabase) {
     private fun consultar(seleccion: String?, argumentos: Array<String>?, orden: String?): List<Apoyo> {
         val consulta = """
             SELECT
-                ${ContratoIquique.Apoyo.COLUMNAS.joinToString(", ")},
-                ${ContratoIquique.Zona.TABLA}.${ContratoIquique.Zona.NOMBRE} AS nombre_zona
-            FROM ${ContratoIquique.Apoyo.TABLA}
-            INNER JOIN ${ContratoIquique.Zona.TABLA}
-                ON ${ContratoIquique.Zona.ID} = ${ContratoIquique.Apoyo.ZONA_ID}
+                ${ContratoIquique.Apoyo.COLUMNAS.joinToString(", ") { "$T.$it" }},
+                $Z.${ContratoIquique.Zona.NOMBRE} AS nombre_zona
+            FROM $T
+            INNER JOIN $Z ON $Z.${ContratoIquique.Zona.ID} = $T.${ContratoIquique.Apoyo.ZONA_ID}
             ${seleccion?.let { "WHERE $it" } ?: ""}
             ORDER BY ${orden ?: "${ContratoIquique.Apoyo.FECHA} DESC"}
         """.trimIndent()
@@ -91,5 +107,10 @@ class ApoyoDao private constructor(private val db: SQLiteDatabase) {
         put(ContratoIquique.Apoyo.CATEGORIA, categoria)
         put(ContratoIquique.Apoyo.MENSAJE, mensaje)
         put(ContratoIquique.Apoyo.FECHA, fecha.time)
+    }
+
+    private companion object {
+        const val T = ContratoIquique.Apoyo.TABLA
+        const val Z = ContratoIquique.Zona.TABLA
     }
 }
