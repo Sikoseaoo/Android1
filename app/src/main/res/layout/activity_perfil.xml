@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="16dp">
+        android:padding="24dp">
 
         <ImageButton
             android:id="@+id/botonVolver"
@@ -18,132 +15,162 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/volver"
-            android:src="@android:drawable/ic_menu_revert" />
+            android:src="@android:drawable/ic_menu_revert"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tituloPerfil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/titulo_perfil"
             android:textColor="@color/textoPrimario"
             android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/botonVolver"
+            app:layout_constraintStart_toEndOf="@id/botonVolver"
+            app:layout_constraintTop_toTopOf="@id/botonVolver" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/perfilAvatar"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/avatar_circulo"
+            android:gravity="center"
+            android:text="@string/perfil_inicial"
+            android:textColor="@color/acentoCielo"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/botonVolver" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/perfilNombre"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="@color/textoPrimario"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/perfilAvatar" />
 
-            <TextView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/avatar_circulo"
-                android:gravity="center"
-                android:text="@string/perfil_inicial"
-                android:textColor="@color/acentoCielo"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/perfilEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/textoSecundario"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/perfilNombre" />
 
-            <TextView
-                android:id="@+id/perfilNombre"
+        <TextView
+            android:id="@+id/perfilRegion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/textoSecundario"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/perfilEmail" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tarjetaZonas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="6dp"
+            app:cardBackgroundColor="@color/fondoTarjeta"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toStartOf="@id/tarjetaApoyos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/perfilRegion">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:textColor="@color/textoPrimario"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:padding="20dp">
 
-            <TextView
-                android:id="@+id/perfilEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:textColor="@color/textoSecundario"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/perfilRegion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:textColor="@color/textoSecundario"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/perfilZonas"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/tarjeta_dato"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:textColor="@color/textoPrimario"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/perfilZonas"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/textoPrimario"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/perfil_zonas"
-                        android:textColor="@color/textoSecundario"
-                        android:textSize="13sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/perfilZonasRotulo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/tarjeta_dato"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:text="@string/perfil_zonas"
+                    android:textColor="@color/textoSecundario"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/perfilZonas" />
 
-                    <TextView
-                        android:id="@+id/perfilApoyos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/textoPrimario"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/perfil_apoyos"
-                        android:textColor="@color/textoSecundario"
-                        android:textSize="13sp" />
+        </androidx.cardview.widget.CardView>
 
-                </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tarjetaApoyos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            app:cardBackgroundColor="@color/fondoTarjeta"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tarjetaZonas"
+            app:layout_constraintTop_toTopOf="@id/tarjetaZonas">
 
-            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/perfilApoyos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoPrimario"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </ScrollView>
+                <TextView
+                    android:id="@+id/perfilApoyosRotulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/perfil_apoyos"
+                    android:textColor="@color/textoSecundario"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/perfilApoyos" />
 
-</LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

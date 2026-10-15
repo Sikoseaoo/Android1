@@ -54,6 +54,16 @@
     <string name="perfil_apoyos">Apoyos</string>
 
     <string name="ver_en_mapa">Ver en una app de mapas</string>
+    <string name="form_titulo_zona">Editar zona</string>
+    <string name="form_zona_nombre_hint">Nombre de la zona</string>
+    <string name="form_zona_descripcion_hint">Descripción de la zona</string>
+    <string name="form_latitud_hint">Latitud</string>
+    <string name="form_longitud_hint">Longitud</string>
+    <string name="form_error_nombre">El nombre no puede estar vacío</string>
+    <string name="form_error_coordenadas">Revisa la latitud y la longitud</string>
+    <string name="confirmar_eliminar_zona">Se borrará la zona y todos sus apoyos. ¿Continuar?</string>
+    <string name="zona_guardada">Zona actualizada</string>
+    <string name="zona_eliminada">Zona eliminada</string>
     <string name="coordenadas">Latitud %1$.4f, longitud %2$.4f</string>
     <string name="sensor_acelerometro">Acelerometro: X %1$.2f, Y %2$.2f</string>
 </resources>

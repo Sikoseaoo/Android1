@@ -63,6 +63,13 @@ class ApoyoDao private constructor(private val db: SQLiteDatabase) {
             arrayOf(id.toString()),
         )
 
+    fun eliminarPorZona(zonaId: Long): Int =
+        db.delete(
+            ContratoIquique.Apoyo.TABLA,
+            "${ContratoIquique.Apoyo.ZONA_ID} = ?",
+            arrayOf(zonaId.toString()),
+        )
+
     fun contar(): Int =
         db.rawQuery("SELECT COUNT(*) FROM ${ContratoIquique.Apoyo.TABLA}", null)
             .use { if (it.moveToFirst()) it.getInt(0) else 0 }

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Spinner
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android1.data.Apoyo
 import com.example.android1.data.ApoyoDao
+import com.example.android1.data.IquiqueCatalogo
 import com.example.android1.data.Zona
 import com.example.android1.data.ZonaDao
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -63,8 +65,85 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         }
 
         findViewById<View>(R.id.botonVerMapa).setOnClickListener { abrirEnMapaExterno() }
+        findViewById<View>(R.id.botonEditarZona).setOnClickListener { abrirEdicion() }
+        findViewById<View>(R.id.botonBorrarZona).setOnClickListener { confirmarBorrado() }
 
         cargarZona()
+    }
+
+    private fun abrirEdicion() {
+        val zona = zonaActual ?: return
+
+        val vista = LayoutInflater.from(this).inflate(R.layout.dialog_zona, null)
+        val campoNombre = vista.findViewById<EditText>(R.id.campoZonaNombre)
+        val campoDescripcion = vista.findViewById<EditText>(R.id.campoZonaDescripcion)
+        val campoLatitud = vista.findViewById<EditText>(R.id.campoZonaLatitud)
+        val campoLongitud = vista.findViewById<EditText>(R.id.campoZonaLongitud)
+        val spinnerCategoria = vista.findViewById<Spinner>(R.id.spinnerZonaCategoria)
+
+        campoNombre.setText(zona.nombre)
+        campoDescripcion.setText(zona.descripcion)
+        campoLatitud.setText(zona.latitud.toString())
+        campoLongitud.setText(zona.longitud.toString())
+
+        spinnerCategoria.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_dropdown_item, IquiqueCatalogo.CATEGORIAS
+        )
+        spinnerCategoria.setSelection(
+            IquiqueCatalogo.CATEGORIAS.indexOf(zona.categoria).coerceAtLeast(0)
+        )
+
+        val dialogo = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.form_titulo_zona)
+            .setView(vista)
+            .setNegativeButton(R.string.cancelar, null)
+            .setPositiveButton(R.string.guardar, null)
+            .create()
+
+        dialogo.show()
+        dialogo.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val nombre = campoNombre.text.toString().trim()
+            val descripcion = campoDescripcion.text.toString().trim()
+            val latitud = campoLatitud.text.toString().trim().toDoubleOrNull()
+            val longitud = campoLongitud.text.toString().trim().toDoubleOrNull()
+
+            if (nombre.isEmpty()) {
+                campoNombre.error = getString(R.string.form_error_nombre)
+                return@setOnClickListener
+            }
+            if (latitud == null || longitud == null) {
+                campoLatitud.error = getString(R.string.form_error_coordenadas)
+                return@setOnClickListener
+            }
+
+            val actualizada = zona.copy(
+                nombre = nombre,
+                categoria = IquiqueCatalogo.CATEGORIAS[spinnerCategoria.selectedItemPosition],
+                descripcion = descripcion,
+                latitud = latitud,
+                longitud = longitud,
+            )
+
+            Tareas.ejecutar { zonaDao.actualizar(actualizada) }
+            Toast.makeText(this, R.string.zona_guardada, Toast.LENGTH_SHORT).show()
+            dialogo.dismiss()
+            cargarZona()
+        }
+    }
+
+    private fun confirmarBorrado() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.confirmar_eliminar_zona)
+            .setNegativeButton(R.string.cancelar, null)
+            .setPositiveButton(R.string.eliminar) { _, _ ->
+                Tareas.ejecutar {
+                    apoyoDao.eliminarPorZona(zonaId)
+                    zonaDao.eliminar(zonaId)
+                }
+                Toast.makeText(this, R.string.zona_eliminada, Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .show()
     }
 
     private fun abrirEnMapaExterno() {
