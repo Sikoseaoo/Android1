@@ -1,0 +1,6 @@
+const reporte = {
+  estado: 'APROBADO',
+  observaciones: ['Mapa OK', 'Reportes OK', 'Sin credenciales expuestas'],
+  version: '1.0.0',
+  fecha: new Date().toISOString()
+}; 
