@@ -24,6 +24,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import java.util.Date
 
+/**
+ * Lista de reclamos con filtros por zona, motivo y texto libre, y su CRUD.
+ */
 class ReclamosActivity : AppCompatActivity() {
 
     private lateinit var lista: RecyclerView
@@ -39,6 +42,11 @@ class ReclamosActivity : AppCompatActivity() {
     private var zonas: List<Zona> = emptyList()
     private val reclamos = mutableListOf<Reporte>()
 
+    /**
+     * Arma la lista, los filtros y la búsqueda.
+     *
+     * @param savedInstanceState estado guardado de la actividad, o `null`.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reclamos)
@@ -79,6 +87,11 @@ class ReclamosActivity : AppCompatActivity() {
         cargarZonas()
     }
 
+    /**
+     * Devuelve un listener que recarga la lista cuando cambia un spinner.
+     *
+     * @return el listener de selección.
+     */
     private fun alCambiarFiltro() = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(padre: AdapterView<*>?, vista: View?, posicion: Int, id: Long) {
             if (zonas.isNotEmpty()) cargar()
@@ -87,6 +100,9 @@ class ReclamosActivity : AppCompatActivity() {
         override fun onNothingSelected(padre: AdapterView<*>?) = Unit
     }
 
+    /**
+     * Carga las zonas y llena el spinner de filtro por zona.
+     */
     private fun cargarZonas() {
         Tareas.consultar({ zonaDao.listar() }) { resultado ->
             zonas = resultado
@@ -99,6 +115,9 @@ class ReclamosActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Lee los filtros y vuelve a cargar la lista de reclamos.
+     */
     private fun cargar() {
         val zonaSeleccionada = filtroZona.selectedItemPosition - 1
         val categoriaSeleccionada = filtroCategoria.selectedItemPosition - 1
@@ -120,6 +139,11 @@ class ReclamosActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Abre el diálogo para crear o editar un reclamo.
+     *
+     * @param reclamo reclamo que se edita, o `null` para crear uno nuevo.
+     */
     private fun abrirFormulario(reclamo: Reporte?) {
         if (zonas.isEmpty()) return
 
@@ -182,6 +206,11 @@ class ReclamosActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Pide confirmación antes de borrar un reclamo.
+     *
+     * @param reclamo reclamo que se quiere eliminar.
+     */
     private fun confirmarBorrado(reclamo: Reporte) {
         MaterialAlertDialogBuilder(this)
             .setMessage(R.string.confirmar_eliminar)
@@ -194,12 +223,25 @@ class ReclamosActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Muestra un mensaje breve sobre la lista.
+     *
+     * @param mensaje texto que se muestra.
+     */
     private fun avisar(mensaje: String) {
         Snackbar.make(lista, mensaje, Snackbar.LENGTH_SHORT).show()
     }
 
+    /**
+     * Adaptador que muestra los reclamos en el `RecyclerView`.
+     */
     private inner class Adaptador : RecyclerView.Adapter<Adaptador.Fila>() {
 
+        /**
+         * Referencias a las vistas de una fila de la lista.
+         *
+         * @param inflada vista ya inflada de la fila.
+         */
         inner class Fila(inflada: View) : RecyclerView.ViewHolder(inflada) {
             val categoria: TextView = inflada.findViewById(R.id.itemCategoria)
             val fecha: TextView = inflada.findViewById(R.id.itemFecha)
@@ -210,12 +252,25 @@ class ReclamosActivity : AppCompatActivity() {
             val borrar: ImageButton = inflada.findViewById(R.id.botonBorrar)
         }
 
+        /**
+         * Crea una fila nueva para la lista.
+         *
+         * @param padre contenedor de la fila.
+         * @param tipo tipo de fila.
+         * @return la fila creada.
+         */
         override fun onCreateViewHolder(padre: ViewGroup, tipo: Int): Fila {
             val inflada = LayoutInflater.from(padre.context)
                 .inflate(R.layout.item_reclamo, padre, false)
             return Fila(inflada)
         }
 
+        /**
+         * Llena una fila con un reclamo.
+         *
+         * @param fila fila que se va a llenar.
+         * @param posicion posición del reclamo en la lista.
+         */
         override fun onBindViewHolder(fila: Fila, posicion: Int) {
             val reclamo = reclamos[posicion]
             fila.categoria.text = reclamo.categoria
@@ -227,6 +282,11 @@ class ReclamosActivity : AppCompatActivity() {
             fila.borrar.setOnClickListener { confirmarBorrado(reclamo) }
         }
 
+        /**
+         * Indica cuántos reclamos hay en la lista.
+         *
+         * @return cantidad de reclamos.
+         */
         override fun getItemCount(): Int = reclamos.size
     }
 }

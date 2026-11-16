@@ -29,6 +29,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.Date
 
+/**
+ * Detalle de una zona: datos, reclamos, edición y lectura del acelerómetro.
+ */
 class ZonaActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
@@ -41,6 +44,11 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
     private var zonaActual: Zona? = null
     private val reclamos = mutableListOf<Reporte>()
 
+    /**
+     * Lee el id de la zona, arma la pantalla y carga los datos.
+     *
+     * @param savedInstanceState estado guardado de la actividad, o `null`.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_zona)
@@ -69,6 +77,9 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         cargarZona()
     }
 
+    /**
+     * Abre la zona en la app de mapas del sistema con un intent implícito `geo:`.
+     */
     private fun abrirEnMapaExterno() {
         val zona = zonaActual ?: return
         val uri = Uri.parse(
@@ -85,6 +96,9 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    /**
+     * Abre un diálogo para editar los datos de la zona.
+     */
     private fun abrirEdicion() {
         val zona = zonaActual ?: return
 
@@ -145,6 +159,9 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    /**
+     * Pide confirmación antes de borrar la zona y sus reclamos.
+     */
     private fun confirmarBorrado() {
         MaterialAlertDialogBuilder(this)
             .setMessage(R.string.confirmar_eliminar_zona)
@@ -160,6 +177,9 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
             .show()
     }
 
+    /**
+     * Vuelve a leer la zona y su lista de reclamos desde SQLite.
+     */
     private fun cargarZona() {
         Tareas.consultar({ zonaDao.porId(zonaId) }) { zona ->
             if (zona == null) {
@@ -185,6 +205,9 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    /**
+     * Abre un diálogo para crear un reclamo en esta zona.
+     */
     private fun abrirFormulario() {
         val vista = LayoutInflater.from(this).inflate(R.layout.dialog_reclamo, null)
         val spinnerCategoria = vista.findViewById<Spinner>(R.id.spinnerFormCategoria)
@@ -232,6 +255,11 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    /**
+     * Muestra los valores del acelerómetro en la pantalla.
+     *
+     * @param evento evento del sensor con los valores leídos.
+     */
     override fun onSensorChanged(evento: SensorEvent) {
         if (evento.sensor.type != Sensor.TYPE_ACCELEROMETER) return
 
@@ -241,8 +269,17 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
             getString(R.string.sensor_acelerometro, x, y)
     }
 
+    /**
+     * No se usa: la precisión del acelerómetro no se muestra.
+     *
+     * @param sensor sensor que cambió.
+     * @param precision precisión nueva.
+     */
     override fun onAccuracyChanged(sensor: Sensor?, precision: Int) = Unit
 
+    /**
+     * Registra el acelerómetro cuando la pantalla vuelve al frente.
+     */
     override fun onResume() {
         super.onResume()
         acelerometro?.let {
@@ -250,13 +287,24 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    /**
+     * Da de baja el acelerómetro cuando la pantalla pasa a segundo plano.
+     */
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
     }
 
+    /**
+     * Adaptador que muestra los reclamos de la zona en el `RecyclerView`.
+     */
     private inner class Adaptador : RecyclerView.Adapter<Adaptador.Fila>() {
 
+        /**
+         * Referencias a las vistas de una fila de la lista.
+         *
+         * @param inflada vista ya inflada de la fila.
+         */
         inner class Fila(inflada: View) : RecyclerView.ViewHolder(inflada) {
             val categoria: TextView = inflada.findViewById(R.id.itemCategoria)
             val fecha: TextView = inflada.findViewById(R.id.itemFecha)
@@ -266,12 +314,25 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
             val borrar: ImageButton = inflada.findViewById(R.id.botonBorrar)
         }
 
+        /**
+         * Crea una fila nueva para la lista.
+         *
+         * @param padre contenedor de la fila.
+         * @param tipo tipo de fila.
+         * @return la fila creada.
+         */
         override fun onCreateViewHolder(padre: ViewGroup, tipo: Int): Fila {
             val inflada = LayoutInflater.from(padre.context)
                 .inflate(R.layout.item_reclamo, padre, false)
             return Fila(inflada)
         }
 
+        /**
+         * Llena una fila con un reclamo.
+         *
+         * @param fila fila que se va a llenar.
+         * @param posicion posición del reclamo en la lista.
+         */
         override fun onBindViewHolder(fila: Fila, posicion: Int) {
             val reclamo = reclamos[posicion]
             fila.categoria.text = reclamo.categoria
@@ -285,10 +346,16 @@ class ZonaActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
+        /**
+         * Indica cuántos reclamos hay en la lista.
+         *
+         * @return cantidad de reclamos.
+         */
         override fun getItemCount(): Int = reclamos.size
     }
 
     companion object {
+        /** Clave del intent con el id de la zona. */
         const val EXTRA_ZONA_ID = "com.example.android1.ZONA_ID"
     }
 }

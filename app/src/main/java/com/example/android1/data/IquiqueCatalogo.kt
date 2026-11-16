@@ -3,15 +3,26 @@ package com.example.android1.data
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 
+/**
+ * Catálogo inicial de zonas de Iquique y valores por defecto del mapa.
+ *
+ * Se usa al crear la base de datos y para llenar los filtros de categoría.
+ */
 object IquiqueCatalogo {
 
+    /** Categorías disponibles para las zonas. */
     val CATEGORIAS = listOf("Playa", "Plaza", "Histórico", "Naturaleza", "Comercio")
 
+    /** Zoom que se aplica al abrir el mapa. */
     const val ZOOM_POR_DEFECTO = 12.0
+
+    /** Zoom que se aplica al centrar en la ubicación del usuario. */
     const val ZOOM_USUARIO = 15.0
 
+    /** Centro del mapa sobre Iquique. */
     val CENTRO = GeoPoint(-20.2141, -70.1439)
 
+    /** Zonas que se cargan en la base la primera vez. */
     val ZONAS = listOf(
         Zona(
             id = 0,

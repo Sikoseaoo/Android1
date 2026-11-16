@@ -33,7 +33,12 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.io.File
 
-// usa Google Maps si hay clave, si no cae a los teselas de Esri
+/**
+ * Mapa de Iquique con las zonas como marcadores.
+ *
+ * Usa Google Maps si hay clave y Google Play Services; si no, cae a osmdroid con
+ * las teselas de Esri.
+ */
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var contenedor: FrameLayout
@@ -54,6 +59,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (concedido) centrarEnMiUbicacion() else avisar(getString(R.string.error_permiso_ubicacion))
         }
 
+    /**
+     * Arma la pantalla, el filtro de categorías y el mapa.
+     *
+     * @param savedInstanceState estado guardado de la actividad, o `null`.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -70,12 +80,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Decide si se puede usar Google Maps.
+     *
+     * @return `true` si hay clave configurada y Google Play Services disponible.
+     */
     private fun usarGoogle(): Boolean {
         if (BuildConfig.CLAVE_MAPS.isBlank()) return false
         return GoogleApiAvailability.getInstance()
             .isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
     }
 
+    /**
+     * Prepara el mapa de Google o el de osmdroid según lo que esté disponible.
+     */
     private fun prepararMapa() {
         if (usarGoogle()) {
             etiquetaMapa.text = getString(R.string.mapa_google)
@@ -96,6 +114,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Se llama cuando Google Maps está listo para dibujar.
+     *
+     * @param map mapa de Google ya inicializado.
+     */
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         map.uiSettings.isZoomControlsEnabled = false
@@ -108,11 +131,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Configura osmdroid con las teselas de Esri y el centro en Iquique.
+     */
     private fun configurarOsmdroid() {
         val configuracion = Configuration.getInstance()
         configuracion.load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
 
-        // hay que identificarse o los servidores rechazan las peticiones
         configuracion.userAgentValue = USER_AGENT
 
         val base = File(cacheDir, "osmdroid")
@@ -126,6 +151,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapaOsm.controller.setCenter(IquiqueCatalogo.CENTRO)
     }
 
+    /**
+     * Llena el spinner de categorías y recarga las zonas al cambiar la selección.
+     */
     private fun configurarFiltro() {
         filtroCategoria = findViewById(R.id.spinnerCategoriaMapa)
         filtroCategoria.adapter = ArrayAdapter(
@@ -142,6 +170,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Carga las zonas de la categoría elegida y las dibuja en el mapa.
+     */
     private fun cargarZonas() {
         val posicion = filtroCategoria.selectedItemPosition
 
@@ -154,6 +185,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Dibuja las zonas en el mapa que esté activo.
+     *
+     * @param zonas zonas que se quieren mostrar.
+     */
     private fun dibujarZonas(zonas: List<Zona>) {
         if (googleMap != null) {
             dibujarEnGoogle(zonas)
@@ -162,6 +198,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Dibuja las zonas en Google Maps y ajusta la cámara a sus límites.
+     *
+     * @param zonas zonas que se quieren mostrar.
+     */
     private fun dibujarEnGoogle(zonas: List<Zona>) {
         val mapa = googleMap ?: return
         mapa.clear()
@@ -177,7 +218,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             zonasPorId[zona.id.toString()] = zona
         }
 
-        // en esta version el listener va en el mapa y no en el marcador
         mapa.setOnMarkerClickListener { marcador ->
             val zona = marcador.tag as? String
             if (zona == null) return@setOnMarkerClickListener false
@@ -194,6 +234,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapa.moveCamera(CameraUpdateFactory.newLatLngBounds(limites, 80))
     }
 
+    /**
+     * Dibuja las zonas en el mapa de osmdroid y ajusta la vista a sus límites.
+     *
+     * @param zonas zonas que se quieren mostrar.
+     */
     private fun dibujarEnOsm(zonas: List<Zona>) {
         mapaOsm.overlays.removeAll(marcadoresOsm)
         marcadoresOsm.clear()
@@ -227,6 +272,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapaOsm.invalidate()
     }
 
+    /**
+     * Abre el detalle de una zona.
+     *
+     * @param zona zona que se quiere abrir.
+     */
     private fun abrirZona(zona: Zona) {
         startActivity(
             Intent(this, ZonaActivity::class.java)
@@ -234,6 +284,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
+    /**
+     * Revisa el permiso de ubicación y, si está concedido, centra el mapa.
+     */
     private fun pedirUbicacion() {
         if (!Ubicacion.permisoConcedido(this)) {
             pedirPermiso.launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -242,6 +295,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         centrarEnMiUbicacion()
     }
 
+    /**
+     * Centra el mapa en la última ubicación conocida del dispositivo.
+     */
     private fun centrarEnMiUbicacion() {
         Ubicacion.ultima(this)
             .addOnSuccessListener { ubicacion ->
@@ -260,6 +316,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
+    /**
+     * Marca la ubicación del usuario en el mapa de osmdroid.
+     *
+     * @param latitud latitud de la ubicación.
+     * @param longitud longitud de la ubicación.
+     */
     private fun mostrarEnOsm(latitud: Double, longitud: Double) {
         if (googleMap != null) return
 
@@ -279,15 +341,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapaOsm.invalidate()
     }
 
+    /**
+     * Muestra un mensaje breve sobre el mapa.
+     *
+     * @param mensaje texto que se muestra.
+     */
     private fun avisar(mensaje: String) {
         Snackbar.make(contenedor, mensaje, Snackbar.LENGTH_LONG).show()
     }
 
+    /**
+     * Reanuda el mapa de osmdroid cuando la actividad vuelve al frente.
+     */
     override fun onResume() {
         super.onResume()
         mapaOsm.onResume()
     }
 
+    /**
+     * Pausa el mapa de osmdroid cuando la actividad pasa a segundo plano.
+     */
     override fun onPause() {
         super.onPause()
         mapaOsm.onPause()

@@ -1,5 +1,21 @@
 # Reclamos Iquique
 
+## Ficha
+
+| Campo | Detalle |
+|---|---|
+| Proyecto | Reclamos Iquique |
+| Autor | Sikoseaoo |
+| Repositorio | https://github.com/Sikoseaoo/Android1 |
+| Actividad | 25 — Seguridad y Documentación |
+| Versión | 1.0.0 |
+| Fecha | Noviembre 2026 |
+| Lenguaje | Kotlin |
+| IDE | Android Studio |
+| SDK mínimo | API 24 (Android 7.0) |
+| Persistencia | SQLite (`SQLiteOpenHelper`) |
+| Mapas | Google Maps con respaldo OpenStreetMap/Esri |
+
 Aplicación Android para reportar reclamos y quejas sobre las zonas de Iquique.
 El mapa muestra las zonas con marcadores y cada una tiene su propia lista de
 reclamos, con motivo y fecha, que la gente puede crear, editar y borrar.
@@ -73,6 +89,14 @@ Dos tablas definidas en `ContratoIquique`:
 
 `reporte.zona_id` es clave foránea hacia `zona._id`, con un índice para las
 consultas por zona.
+
+## Documentación
+
+- [Diagrama de flujo de actividades (UI Flow / Intents)](docs/diagrama-flujo.md)
+- [Modelo entidad-relación de SQLite (ERD)](docs/modelo-er.md)
+
+El código está documentado con KDoc/JavaDoc estructurado (`@param`, `@return`,
+`@throws`) en las clases y funciones principales.
 
 ## Cómo ejecutarlo
 
